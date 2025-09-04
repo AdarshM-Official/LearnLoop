@@ -20,11 +20,12 @@
       --bg-light: #f8f9fa;
       --bg-dark: #121212;
       --card-bg-light: #ffffff;
+      --primary-color:linear-gradient(45deg, #6a11cb, #2575fc);
       --card-bg-dark: #1e1e1e;
       --text-light: #212529;
-      --text-dark: #e0e0e0;
+      --text-dark: #ffffff;
       --text-muted-light: #6c757d;
-      --text-muted-dark: #ffffff;
+      --text-muted-dark: #a0a0a0;
       --border-light: #dee2e6;
       --border-dark: #343a40;
       --purple: #7f00ff;
@@ -70,7 +71,8 @@
 
     /* --- Navbar --- */
     .navbar {
-      background: rgba(255, 255, 255, 0.7);
+      /* background: rgba(255, 255, 255, 0.7); */
+      background: transparent;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       box-shadow: var(--shadow-sm);
@@ -82,7 +84,7 @@
     }
 
     .navbar-brand {
-      background: var(--gradient);
+      background: var(--primary-color);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 700;
@@ -276,6 +278,10 @@
     body.dark-mode #how-it-works .timeline-step p.text-muted {
         color: var(--text-dark) !important; /* Overrides Bootstrap's default muted color */
     }
+
+    body.dark-mode #faq .accordion-body {
+    color: var(--text-dark);
+}
   </style>
 </head>
 <body>
@@ -305,7 +311,7 @@
   <div class="container position-relative" data-aos="fade-up">
     <h1 class="display-3">Your Future, Redefined.</h1>
     <p class="lead">Stop guessing. Start discovering. PathFinder uses advanced AI to match your unique personality and skills with careers you'll not just succeed in, but love.</p>
-    <a href="#getstarted" class="btn btn-hero mt-3">🚀 Find Your Path for Free</a>
+    <a href="{% url 'start_choice'%}" class="btn btn-hero mt-3">🚀 Find Your Path for Free</a>
   </div>
 </section>
 
@@ -361,14 +367,14 @@
         <p class="lead section-subtitle mb-5">From code to creativity, find your niche.</p>
     </div>
     <div class="row g-4">
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="100"><div class="card-custom text-center"><i class="bi bi-code-slash fs-2 text-primary mb-3"></i><h6>Software Engineering</h6></div></div>
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="150"><div class="card-custom text-center"><i class="bi bi-bar-chart-line-fill fs-2 text-success mb-3"></i><h6>Data Science & AI</h6></div></div>
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="200"><div class="card-custom text-center"><i class="bi bi-palette-fill fs-2 text-warning mb-3"></i><h6>UX/UI Design</h6></div></div>
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="250"><div class="card-custom text-center"><i class="bi bi-shield-lock-fill fs-2 text-danger mb-3"></i><h6>Cybersecurity</h6></div></div>
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="300"><div class="card-custom text-center"><i class="bi bi-cloud-fill fs-2 text-info mb-3"></i><h6>Cloud Computing</h6></div></div>
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="350"><div class="card-custom text-center"><i class="bi bi-bullseye fs-2" style="color: #6f42c1;" class="mb-3"></i><h6>Digital Marketing</h6></div></div>
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="400"><div class="card-custom text-center"><i class="bi bi-heart-pulse-fill fs-2 text-danger mb-3"></i><h6>Healthcare Tech</h6></div></div>
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="450"><div class="card-custom text-center"><i class="bi bi-bank fs-2 text-secondary mb-3"></i><h6>Fintech</h6></div></div>
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="100"><div class="card-custom text-center"><i class="bi bi-heart-pulse-fill fs-2 text-danger mb-3"></i><h6>Healthcare & Wellness</h6></div></div>
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="150"><div class="card-custom text-center"><i class="bi bi-palette-fill fs-2 text-warning mb-3"></i><h6>Creative Arts & Design</h6></div></div>
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="200"><div class="card-custom text-center"><i class="bi bi-briefcase-fill fs-2 text-primary mb-3"></i><h6>Business & Finance</h6></div></div>
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="250"><div class="card-custom text-center"><i class="bi bi-book-half fs-2 text-success mb-3"></i><h6>Education & Training</h6></div></div>
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="300"><div class="card-custom text-center"><i class="bi bi-tools fs-2 text-secondary mb-3"></i><h6>Engineering & Trades</h6></div></div>
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="350"><div class="card-custom text-center"><i class="bi bi-megaphone-fill fs-2 text-info mb-3"></i><h6>Marketing & Communications</h6></div></div>
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="400"><div class="card-custom text-center"><i class="bi bi-eyedropper fs-2 mb-3" style="color: #6f42c1;"></i><h6>Science & Research</h6></div></div>
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="450"><div class="card-custom text-center"><i class="bi bi-geo-alt-fill fs-2 text-danger mb-3"></i><h6>Hospitality & Tourism</h6></div></div>
     </div>
   </div>
 </section>
@@ -468,7 +474,7 @@
         <div id="cta" class="text-center text-white p-5">
             <h2 class="display-5">Ready to Find Your Calling?</h2>
             <p class="lead my-4">Your personalized career roadmap is just a few clicks away. <br> Start your free assessment now and take the first step towards a future you love.</p>
-            <a href="#getstarted" class="btn btn-hero mt-3">Let's Do This! <i class="bi bi-arrow-right-short"></i></a>
+            <a href="{% url 'start_choice' %}" class="btn btn-hero mt-3">Let's Do This! <i class="bi bi-arrow-right-short"></i></a>
         </div>
     </div>
 </section>

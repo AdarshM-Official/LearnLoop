@@ -4,220 +4,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Career Selection</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>CareerCompass - Your Personalized Career Roadmap</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
     <style>
+        :root {
+            --font-family: 'Inter', sans-serif;
+            --primary-color: #6a11cb;
+            --primary-gradient: linear-gradient(45deg, #6a11cb, #2575fc);
+            --bg-light: #f8f9fa;
+            --bg-dark: #121212;
+            --card-bg-light: #ffffff;
+            --card-bg-dark: #1e1e1e;
+            --text-light: #f8f9fa;
+            --text-dark: #212529;
+            --text-muted-light: #6c757d;
+            --text-muted-dark: #adb5bd;
+            --border-light: #dee2e6;
+            --border-dark: #343a40;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.12);
+            --border-radius-md: 16px;
+            --border-radius-lg: 24px;
+        }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f7f9fc;
-            color: #222;
-            transition: background 0.3s, color 0.3s;
+            font-family: var(--font-family);
+            background: var(--bg-light);
+            color: var(--text-dark);
+            transition: background 0.4s ease, color 0.4s ease;
         }
+
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-light);
+        }
+
+        .section-title {
+            font-weight: 700;
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.15rem);
+            color: var(--text-muted-light);
+            max-width: 650px;
+            margin: 0 auto 4rem auto;
+        }
+        body.dark-mode .section-subtitle { color: var(--text-muted-dark); }
+        
+        /* --- Navbar --- */
         .navbar {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            transition: background 0.4s ease;
         }
-        .nav-home {
-            font-size: 1.2rem;
+        body.dark-mode .navbar {
+            background: rgba(30, 30, 30, 0.8);
+            border-bottom: 1px solid var(--border-dark);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Quiz Section --- */
+        .quiz-section {
+            padding: 100px 0;
+            text-align: center;
+        }
+        .quiz-icon {
+            font-size: 4rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+        .cta-button {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 50px;
+            padding: 14px 32px;
             font-weight: 600;
-            letter-spacing: 1px;
-            color: #2d6cdf !important;
-            border-radius: 24px;
-            transition: background 0.2s;
+            color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-size: 200% auto;
         }
-        .nav-home:hover {
-            background: #eaf2ff;
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(106, 17, 203, 0.25);
+            background-position: right center;
+            color: white;
         }
-        .dark-mode {
-            background: #181a20 !important;
-            color: #f7f9fc !important;
+
+        /* --- How it Works --- */
+        .step-card {
+            background: var(--card-bg-light);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-md);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
         }
-        .dark-mode .navbar {
-            background: #23272f !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        .step-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
         }
-        .dark-mode .nav-home {
-            color: #90caf9 !important;
+        body.dark-mode .step-card {
+            background: var(--card-bg-dark);
+            border-color: var(--border-dark);
         }
-        .dark-mode .hero-title {
-            color: #90caf9;
-        }
-        .dark-mode .hero-desc {
-            color: #b0bec5;
-        }
-        .hero {
+        .step-number {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 80vh;
-            text-align: center;
-            padding: 32px 16px;
-            animation: fadeIn 1.2s;
+            margin: 0 auto 1.5rem auto;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(40px);}
-            to { opacity: 1; transform: translateY(0);}
+
+        /* --- Career Card --- */
+        .career-card {
+            background: var(--card-bg-light);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border-light);
+            height: 100%;
         }
-        .hero-img {
-            width: 340px;
-            max-width: 90vw;
-            margin-bottom: 32px;
-            border-radius: 24px;
-            box-shadow: 0 4px 24px rgba(45,108,223,0.08);
-            object-fit: cover;
-            animation: imgPop 1s;
+        .career-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
         }
-        @keyframes imgPop {
-            0% { transform: scale(0.95); opacity: 0;}
-            100% { transform: scale(1); opacity: 1;}
+        body.dark-mode .career-card {
+            background: var(--card-bg-dark);
+            border-color: var(--border-dark);
         }
-        .hero-title {
-            font-size: 2.4rem;
+        .career-card-body {
+            padding: 1.75rem;
+        }
+        .career-card .badge {
+            font-size: 0.75rem;
+            padding: 0.4em 0.8em;
+        }
+        .career-card .salary {
             font-weight: 600;
-            margin-bottom: 16px;
-            color: #2d6cdf;
-            animation: fadeInTitle 1.2s;
+            color: #198754;
         }
-        @keyframes fadeInTitle {
-            from { opacity: 0; transform: translateY(-20px);}
-            to { opacity: 1; transform: translateY(0);}
+        body.dark-mode .career-card .salary {
+            color: #20c997;
         }
-        .hero-desc {
-            font-size: 1.1rem;
-            color: #444;
-            max-width: 480px;
-            margin: 0 auto 32px auto;
-            animation: fadeInDesc 1.4s;
+
+        /* --- Final CTA --- */
+        .final-cta {
+            background: var(--primary-gradient);
+            border-radius: var(--border-radius-lg);
         }
-        @keyframes fadeInDesc {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 32px;
-            margin: 48px 0;
-        }
-        .feature-card {
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 2px 16px rgba(45,108,223,0.07);
-            padding: 32px 24px;
-            width: 320px;
-            max-width: 90vw;
-            text-align: left;
-            transition: transform 0.2s, box-shadow 0.2s;
-            animation: fadeInCard 1.6s;
-        }
-        .feature-card:hover {
-            transform: translateY(-8px) scale(1.03);
-            box-shadow: 0 8px 32px rgba(45,108,223,0.12);
-        }
-        @keyframes fadeInCard {
-            from { opacity: 0; transform: translateY(30px);}
-            to { opacity: 1; transform: translateY(0);}
-        }
-        .feature-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #2d6cdf;
-            margin-bottom: 12px;
-        }
-        .feature-desc {
-            color: #555;
-            font-size: 1rem;
-        }
-        .dark-mode .feature-card {
-            background: #23272f;
-            color: #f7f9fc;
-            box-shadow: 0 2px 16px rgba(45,108,223,0.18);
-        }
-        .dark-mode .feature-title {
-            color: #90caf9;
-        }
-        .dark-mode .feature-desc {
-            color: #b0bec5;
-        }
-        @media (max-width: 600px) {
-            .hero-title {
-                font-size: 1.5rem;
-            }
-            .hero-img {
-                width: 90vw;
-            }
-            .features {
-                flex-direction: column;
-                gap: 24px;
-            }
-            .feature-card {
-                width: 95vw;
-            }
-        }
+        
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-white py-3">
-        <div class="container justify-content-center">
-            <a href="/" class="nav-home mx-auto">Home</a>
-            <button id="toggleMode" class="btn btn-outline-primary ms-3" type="button" aria-label="Toggle dark mode">
-                <span id="modeIcon" class="bi bi-moon"></span>
-            </button>
-        </div>
-    </nav>
-    <section class="hero">
-        <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80" alt="Career Choice" class="hero-img">
-        <h1 class="hero-title">Find Your Perfect Career Path</h1>
-        <p class="hero-desc">
-            Discover opportunities that match your passion and skills. Make informed choices and shape your future with confidence.
-        </p>
-        <a href="#features" class="btn btn-primary btn-lg mt-3" style="border-radius: 24px; animation: fadeInDesc 1.8s;">
-            Explore Features
-        </a>
-    </section>
-    <section id="features" class="features">
-        <div class="feature-card">
-            <div class="feature-title">Personalized Recommendations</div>
-            <div class="feature-desc">
-                Get career suggestions tailored to your interests and strengths using smart algorithms.
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top py-3">
+            <div class="container">
+                <a class="navbar-brand fs-4" href="/">CareerCompass</a>
+                <button id="toggleMode" class="btn btn-outline-secondary rounded-pill" type="button" aria-label="Toggle dark mode">
+                    <i id="modeIcon" class="bi bi-moon-stars-fill"></i>
+                </button>
             </div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-title">Expert Guidance</div>
-            <div class="feature-desc">
-                Access resources and advice from industry professionals to help you make informed decisions.
+        </nav>
+    </header>
+
+    <main>
+        <!-- Quiz Start Section -->
+        <section class="quiz-section container" data-aos="fade-up">
+            <div class="quiz-icon"><i class="bi bi-compass"></i></div>
+            <h1 class="section-title">Find the Career That Fits You Best</h1>
+            <p class="section-subtitle">
+                Our intelligent quiz analyzes your personality, interests, and skills to reveal the career paths where you'll not only succeed but thrive.
+            </p>
+            <a href="#quiz" class="btn btn-primary btn-lg cta-button">
+                Start the 5-Minute Quiz <i class="bi bi-arrow-right-short"></i>
+            </a>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="container py-5">
+            <div class="text-center">
+                <h2 class="section-title" data-aos="fade-up">Your Journey to Clarity in 3 Steps</h2>
             </div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-title">Skill Assessment</div>
-            <div class="feature-desc">
-                Evaluate your skills and discover areas for growth to boost your career prospects.
+            <div class="row g-4 mt-4">
+                <div class="col-lg-4 d-flex" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h5 class="fw-bold mb-3">Take the Quiz</h5>
+                        <p class="text-muted">Answer a series of engaging, scenario-based questions. It's quick, intuitive, and reveals more than you'd expect.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 d-flex" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h5 class="fw-bold mb-3">Get AI Analysis</h5>
+                        <p class="text-muted">Our algorithm processes your answers, comparing them against thousands of career profiles and market data points.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 d-flex" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h5 class="fw-bold mb-3">Explore Your Roadmap</h5>
+                        <p class="text-muted">Receive a personalized report with your top career matches, skill-gap analysis, and actionable next steps.</p>
+                    </div>
+                </div>
             </div>
+        </section>
+
+        <!-- Featured Careers Section -->
+        <section class="py-5" style="background-color: var(--card-bg-light); transition: background-color 0.4s ease;">
+            <div class="container" body.dark-mode & { background-color: var(--card-bg-dark); }>
+                <div class="text-center">
+                    <h2 class="section-title" data-aos="fade-up">Featured Career Spotlights</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                        Get a glimpse into some of the most in-demand roles today. Your perfect career might be one of these.
+                    </p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6 d-flex" data-aos="zoom-in-up">
+                        <div class="career-card">
+                            <div class="career-card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h5 class="fw-bold mb-0">Data Scientist</h5>
+                                    <span class="badge text-bg-primary rounded-pill">High Growth</span>
+                                </div>
+                                <p class="text-muted">Analyze complex data to find trends and insights that help businesses make smarter decisions.</p>
+                                <h6 class="fw-semibold small">Key Skills:</h6>
+                                <p>
+                                    <span class="badge bg-secondary-subtle text-dark-emphasis">Python</span>
+                                    <span class="badge bg-secondary-subtle text-dark-emphasis">SQL</span>
+                                    <span class="badge bg-secondary-subtle text-dark-emphasis">Machine Learning</span>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center mt-4">
+                                    <span class="salary">₹10L - ₹25L+ PA</span>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 d-flex" data-aos="zoom-in-up" data-aos-delay="150">
+                        <div class="career-card">
+                            <div class="career-card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h5 class="fw-bold mb-0">UX/UI Designer</h5>
+                                    <span class="badge text-bg-success rounded-pill">Creative</span>
+                                </div>
+                                <p class="text-muted">Craft intuitive and beautiful digital products, focusing on user experience and visual design.</p>
+                                <h6 class="fw-semibold small">Key Skills:</h6>
+                                <p>
+                                    <span class="badge bg-secondary-subtle text-dark-emphasis">Figma</span>
+                                    <span class="badge bg-secondary-subtle text-dark-emphasis">User Research</span>
+                                    <span class="badge bg-secondary-subtle text-dark-emphasis">Prototyping</span>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center mt-4">
+                                    <span class="salary">₹6L - ₹18L+ PA</span>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 d-flex" data-aos="zoom-in-up" data-aos-delay="300">
+                        <div class="career-card">
+                             <div class="career-card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h5 class="fw-bold mb-0">Digital Marketing Manager</h5>
+                                    <span class="badge text-bg-warning rounded-pill">Strategic</span>
+                                </div>
+                                <p class="text-muted">Develop and execute online marketing campaigns across various channels like social media, SEO, and email.</p>
+                                <h6 class="fw-semibold small">Key Skills:</h6>
+                                <p>
+                                    <span class="badge bg-secondary-subtle text-dark-emphasis">SEO/SEM</span>
+                                    <span class="badge bg-secondary-subtle text-dark-emphasis">Content Strategy</span>
+                                    <span class="badge bg-secondary-subtle text-dark-emphasis">Analytics</span>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center mt-4">
+                                    <span class="salary">₹8L - ₹20L+ PA</span>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Final CTA Section -->
+        <section class="container py-5">
+            <div class="final-cta text-white p-5 text-center" data-aos="zoom-in">
+                <h2 class="display-5 fw-bold">Ready to Discover Your True Calling?</h2>
+                <p class="lead my-4 mx-auto" style="max-width: 700px;">Your personalized career roadmap is just a few clicks away. Start the free assessment now and take the first real step towards a future you're passionate about.</p>
+                <a href="#quiz" class="btn btn-light btn-lg cta-button" style="background: white; color: var(--primary-color);">
+                    Find My Career Path Now!
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-4 mt-4 border-top" style="border-color: var(--border-light) !important;">
+        <div class="container">
+            <p class="mb-1 text-muted">&copy; 2025 CareerCompass. All rights reserved.</p>
+            <p class="small">
+                <a href="#" class="text-decoration-none text-muted">About Us</a> &middot;
+                <a href="#" class="text-decoration-none text-muted">Contact</a> &middot;
+                <a href="#" class="text-decoration-none text-muted">Privacy Policy</a>
+            </p>
         </div>
-    </section>
-    <footer class="text-center py-4" style="color:#888;">
-        &copy; 2024 CareerLand. All rights reserved.
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Dark mode toggle
-        const toggleBtn = document.getElementById('toggleMode');
-        const modeIcon = document.getElementById('modeIcon');
-        function setDarkMode(on) {
-            document.body.classList.toggle('dark-mode', on);
-            modeIcon.className = on ? 'bi bi-sun' : 'bi bi-moon';
-        }
-        // Load mode from localStorage
-        let darkMode = localStorage.getItem('darkMode') === 'true';
-        setDarkMode(darkMode);
-        toggleBtn.onclick = () => {
-            darkMode = !darkMode;
-            setDarkMode(darkMode);
-            localStorage.setItem('darkMode', darkMode);
-        };
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize AOS (Animate on Scroll)
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 50,
+            });
+
+            // Dark Mode Toggle Logic
+            const toggleBtn = document.getElementById('toggleMode');
+            const modeIcon = document.getElementById('modeIcon');
+            const body = document.body;
+
+            function setDarkMode(isDark) {
+                body.classList.toggle('dark-mode', isDark);
+                modeIcon.className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+                localStorage.setItem('darkMode', isDark);
+            }
+
+            let isDarkMode = localStorage.getItem('darkMode') === 'true';
+            
+            // Check for system preference if no theme is saved
+            if (localStorage.getItem('darkMode') === null) {
+                isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            }
+
+            setDarkMode(isDarkMode);
+
+            toggleBtn.addEventListener('click', () => {
+                isDarkMode = !isDarkMode;
+                setDarkMode(isDarkMode);
+            });
+        });
     </script>
 </body>
-</html></div>
+</html>

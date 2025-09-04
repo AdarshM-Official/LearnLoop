@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("core.urls")),  # ✅ This now works
     path("api/", include("api.urls")),  # ✅ This now works
+    path("choice/", include("careerchoice.urls")),  # ✅ This now works
 ]
 
 
