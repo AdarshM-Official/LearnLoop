@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'api',
     'careerchoice', 
     'rest_framework',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -79,8 +80,12 @@ WSGI_APPLICATION = 'Learnloop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'LearnloopDB',                      # Replace with your database name
+        'USER': 'Learnloop_roles',                  # Replace with your PostgreSQL username
+        'PASSWORD': '2419',                         # Replace with your PostgreSQL password
+        'HOST': 'localhost',                        # Or your db host, e.g., an IP address
+        'PORT': '5432',                             # Default PostgreSQL port
     }
 }
 
@@ -127,3 +132,13 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# URL to redirect to after a successful login.
+LOGIN_REDIRECT_URL = 'start_choice' 
+
+# URL to redirect to after a user logs out.
+LOGOUT_REDIRECT_URL = 'login'
+
+# settings.py
+LOGIN_URL = '/users/login/'

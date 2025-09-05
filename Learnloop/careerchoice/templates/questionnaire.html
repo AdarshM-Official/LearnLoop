@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Questionnaire</title>
+    <style> /* Add your CSS here */ </style>
+</head>
+<body>
+    <h1>Please fill out our questionnaire</h1>
+    <form method="POST" action="{% url 'questionnaire' %}">
+        {% csrf_token %} {# IMPORTANT: Django security token #}
+        
+        {% for question in questions %}
+            <fieldset>
+                <legend>{{ question.text }}</legend>
+                {% for option in question.options.all %}
+                    <div>
+                        <input type="radio" 
+                               name="question_{{ question.id }}" 
+                               value="{{ option.id }}" 
+                               id="option_{{ option.id }}" 
+                               required>
+                        <label for="option_{{ option.id }}">{{ option.text }}</label>
+                    </div>
+                {% endfor %}
+            </fieldset>
+        {% endfor %}
+        
+        <button type="submit">Submit Answers</button>
+    </form>
+</body>
+</html>
