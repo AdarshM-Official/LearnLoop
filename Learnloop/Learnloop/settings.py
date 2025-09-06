@@ -135,10 +135,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # URL to redirect to after a successful login.
-LOGIN_REDIRECT_URL = 'start_choice' 
+LOGIN_REDIRECT_URL = 'login' 
 
 # URL to redirect to after a user logs out.
 LOGOUT_REDIRECT_URL = 'login'
 
 # settings.py
-LOGIN_URL = '/users/login/'
+LOGIN_URL = '/users/auth/'  # Redirect to this URL for login if not authenticated

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- CSS FILES -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <title>{% block title %}Learnloop{% endblock %}</title>
+
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --bg-light: #f4f7f9;
+            --text-light: #212529;
+            --navbar-bg-light: rgba(255, 255, 255, 0.8);
+            --card-bg-light: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --bg-dark: #121212;
+            --text-dark: #e0e0e0;
+            --navbar-bg-dark: rgba(28, 28, 28, 0.8);
+            --card-bg-dark: #1e1e1e;
+            --border-dark: #333;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .navbar {
+            background: var(--navbar-bg-light);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid transparent;
+            transition: background 0.3s ease;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+
+        body.dark-mode .navbar {
+            background: var(--navbar-bg-dark);
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* === Dropdown Design === */
+        .dropdown-menu {
+            border-radius: 1rem;
+            border: none;
+            box-shadow: var(--shadow);
+            background-color: var(--card-bg-light);
+            padding: 0.5rem 0;
+            min-width: 220px;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-header {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .dropdown-item {
+            color: var(--text-light);
+            padding: 0.75rem 1.25rem;
+            transition: background-color 0.2s ease, color 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(-5px);
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 0.5rem;
+        }
+
+        /* Animate items when dropdown is shown */
+        .dropdown-menu.show .dropdown-header,
+        .dropdown-menu.show .dropdown-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered animation */
+        .dropdown-menu.show .dropdown-header { transition-delay: 0.05s; }
+        .dropdown-menu.show .dropdown-item:nth-child(2) { transition-delay: 0.1s; }
+        .dropdown-menu.show .dropdown-item:nth-child(3) { transition-delay: 0.15s; }
+        .dropdown-menu.show .dropdown-item:nth-child(4) { transition-delay: 0.2s; }
+
+        /* Dark Mode Styling */
+        body.dark-mode .dropdown-menu {
+            background: rgba(40, 40, 40, 0.9);
+            border: 1px solid var(--border-dark);
+            backdrop-filter: blur(12px);
+        }
+
+        body.dark-mode .dropdown-item {
+            color: #ffffff;
+        }
+
+        body.dark-mode .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        body.dark-mode .dropdown-header {
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .dropdown-header small {
+            color: #b0b0b0 !important;
+        }
+
+        /* Rotate profile icon on dropdown toggle */
+        #navbarDropdown i {
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown.show #navbarDropdown i {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">Learnloop</a>
+            <div class="d-flex align-items-center ms-auto">
+                {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <a href="javascript:void(0)" 
+                           class="nav-link dropdown-toggle d-flex align-items-center" 
+                           id="navbarDropdown" 
+                           role="button" 
+                           data-bs-toggle="dropdown" 
+                           aria-expanded="false">
+                            <i class="fas fa-user-circle fa-2x text-secondary"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li>
+                                <div class="dropdown-header px-3 py-2">
+                                    <h6 class="mb-0 fw-bold">{{ user.username }}</h6>
+                                    <small class="text-muted">{{ user.email }}</small>
+                                </div>
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog"></i> My Profile</a></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                {% endif %}
+                <button id="toggleMode" class="btn btn-outline-secondary rounded-pill ms-3" type="button" aria-label="Toggle dark mode">
+                    <i id="modeIcon" class="bi bi-moon-stars-fill"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container mt-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleModeButton = document.getElementById('toggleMode');
+            const modeIcon = document.getElementById('modeIcon');
+            const body = document.body;
+
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    body.classList.add('dark-mode');
+                    modeIcon.classList.remove('bi-moon-stars-fill');
+                    modeIcon.classList.add('bi-sun-fill');
+                } else {
+                    body.classList.remove('dark-mode');
+                    modeIcon.classList.remove('bi-sun-fill');
+                    modeIcon.classList.add('bi-moon-stars-fill');
+                }
+            };
+
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+
+            toggleModeButton.addEventListener('click', () => {
+                const newTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
+        });
+    </script>
+</body>
+</html>
