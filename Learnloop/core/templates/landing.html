@@ -71,16 +71,20 @@
 
     /* --- Navbar --- */
     .navbar {
-      /* background: rgba(255, 255, 255, 0.7); */
-      background: transparent;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: var(--shadow-sm);
+      position: absolute; /* Position it over the hero section */
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999; /* Ensure it stays on top */
+      background: transparent; /* Subtle glass effect */
+      /* backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); */
+      box-shadow: none; /* Remove shadow when on hero */
       transition: background-color 0.3s ease;
     }
     
     body.dark-mode .navbar {
-      background: rgba(30, 30, 30, 0.7);
+      background:transparent; /* Dark glass effect */
     }
 
     .navbar-brand {
@@ -94,19 +98,28 @@
     .nav-link {
         font-weight: 600;
         transition: color 0.2s;
+        color: rgba(255, 255, 255, 0.85); /* Make nav links visible on dark hero */
+    }
+
+    .nav-link:hover {
+        color: #ffffff;
     }
 
     /* --- Hero Section --- */
-  .hero {
-    /* CORRECTED LINE FOR DJANGO */
-    background: linear-gradient(rgba(25, 28, 43, 0.7), rgba(25, 28, 43, 0.7)), url("{% static 'images/Gemini_Generated_Image_wc75v4wc75v4wc75.png' %}") no-repeat center center / cover;
+    .hero {
+      /* CORRECTED LINE FOR DJANGO */
+      background: linear-gradient(rgba(25, 28, 43, 0.7), rgba(25, 28, 43, 0.7)), url("{% static 'images/Gemini_Generated_Image_wc75v4wc75v4wc756.png' %}") no-repeat center center / cover;
 
-    color: white;
-    padding: 150px 0 120px;
-    text-align: center;
-    overflow: hidden;
-    position: relative;
-  }
+      color: white;
+      min-height: 100vh; /* Set hero height to fill the viewport */
+      display: flex; /* Enable flexbox for vertical centering */
+      align-items: center; /* Center content vertically */
+      justify-content: center; /* Center content horizontally */
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+      padding: 100px 0; /* Add padding for spacing */
+    }
 
     .hero::before {
       content: '';
@@ -223,6 +236,12 @@
     body.dark-mode .navbar-toggler-icon {
         filter: invert(1); /* This makes the hamburger icon visible on dark backgrounds */
     }
+    .navbar-toggler {
+        border-color: rgba(255,255,255,0.5); /* Make toggler border visible */
+    }
+    .navbar-toggler-icon {
+        filter: invert(1) brightness(1.5); /* Make toggler icon white */
+    }
 
     #reviews .testimonial img {
       width: 60px;
@@ -282,11 +301,14 @@
     body.dark-mode #faq .accordion-body{
     color: var(--text-dark);
 }
+  body.dark-mode .card-custom p.text-muted {
+        color: var(--text-muted-dark) !important; /* Overrides Bootstrap's default muted color */
+    }
   </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg sticky-top">
+<nav class="navbar navbar-expand-xl navbar-light py-3">
   <div class="container">
     <a class="navbar-brand" href="#">LearnLoop</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -314,19 +336,6 @@
     <a href="{% url 'start_choice'%}" class="btn btn-hero mt-3">🚀 Find Your Path for Free</a>
   </div>
 </section>
-
-<!-- <section id="trusted-by" class="py-4">
-    <div class="container text-center" data-aos="fade-up">
-        <h6 class="text-uppercase text-muted small fw-bold mb-4">Trusted By Students At</h6>
-        <div class="d-flex flex-wrap justify-content-center align-items-center logos">
-            <img src="https://via.placeholder.com/150x50/FFFFFF/CCCCCC?text=InnovateU" alt="Innovate University" class="mx-4 my-2">
-            <img src="https://via.placeholder.com/150x50/FFFFFF/CCCCCC?text=TechNex" alt="TechNex Institute" class="mx-4 my-2">
-            <img src="https://via.placeholder.com/150x50/FFFFFF/CCCCCC?text=FutureMinds" alt="FutureMinds College" class="mx-4 my-2">
-            <img src="https://via.placeholder.com/150x50/FFFFFF/CCCCCC?text=CodeGenius" alt="CodeGenius Academy" class="mx-4 my-2">
-            <img src="https://via.placeholder.com/150x50/FFFFFF/CCCCCC?text=DesignShift" alt="DesignShift School" class="mx-4 my-2">
-        </div>
-    </div>
-</section> -->
 
 <section class="py-5" id="features">
   <div class="container">
