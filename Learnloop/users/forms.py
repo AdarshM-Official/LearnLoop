@@ -43,6 +43,17 @@ class SignupForm(forms.Form):
             }
         )
     )
+    profile_img = forms.ImageField(
+        required=False,
+        widget=forms.FileInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Upload Profile Image',
+            'id': 'id_signup_profileimg'
+        })
+    ) # Added profile image field
+
+
+    
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={

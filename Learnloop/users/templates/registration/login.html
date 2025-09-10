@@ -125,7 +125,7 @@
             overflow: hidden;
             width: 768px;
             max-width: 100%;
-            min-height: 520px;
+            min-height: 600px;
         }
 
         .form-container {
@@ -249,6 +249,12 @@
             background-color: var(--light-gray-color);
             transform: scale(1.1);
         }
+        #profile-picture {
+            text-align: left;
+            margin-top: 10px;
+            font-size: 14px;    
+            color: var(--dark-text-color);
+        }
     </style>
 </head>
 <body>
@@ -279,6 +285,8 @@
             
             {{ signup_form.username }}
             {{ signup_form.email }}
+            <label for="" id="profile-picture">Profile Image</label>
+            {{ signup_form.profile_img }}
             {{ signup_form.password }}
             {{ signup_form.password_confirm }}
 

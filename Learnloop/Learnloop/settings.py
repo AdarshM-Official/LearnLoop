@@ -80,12 +80,8 @@ WSGI_APPLICATION = 'Learnloop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'LearnloopDB',                      # Replace with your database name
-        'USER': 'Learnloop_roles',                  # Replace with your PostgreSQL username
-        'PASSWORD': '2419',                         # Replace with your PostgreSQL password
-        'HOST': 'localhost',                        # Or your db host, e.g., an IP address
-        'PORT': '5432',                             # Default PostgreSQL port
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',                            # Default PostgreSQL port
     }
 }
 

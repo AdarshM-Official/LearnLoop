@@ -52,3 +52,6 @@ def auth_view(request):
         'login_form': login_form,
         'signup_form': signup_form
     })
+
+def profile_view(request):
+    return render(request, 'profile/profile.html')
