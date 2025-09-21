@@ -1,229 +1,92 @@
+<!-- /d:/Developments/MCA Project/Learnloop/users/templates/profile/profile.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Profile</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Profile Page</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@400;600;700&display=swap');
-
-        :root {
-            --primary-bg: #f5f7fa;
-            --card-bg: #ffffff;
-            --primary-text: #2c3e50;
-            --secondary-text: #7f8c8d;
-            --accent-color: #34495e;
-            --highlight-color: #3498db;
-        }
-
         body {
-            font-family: 'Lato', sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--primary-text);
-            line-height: 1.6;
-            margin: 0;
-            padding: 40px;
+            font-family: Arial, sans-serif;
+            margin: 20px;
         }
-
-        .profile-wrapper {
-            max-width: 1100px;
-            margin: auto;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-            background-color: var(--card-bg);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        .profile-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
             border-radius: 10px;
-            overflow: hidden;
+            background-color: #f9f9f9;
         }
-
-        .profile-sidebar {
-            background-color: var(--accent-color);
-            color: #ecf0f1;
-            padding: 30px;
+        .profile-container h1 {
             text-align: center;
         }
-
         .profile-photo {
+            display: block;
+            margin: 0 auto 20px;
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            border: 5px solid rgba(255, 255, 255, 0.3);
             object-fit: cover;
-            margin-bottom: 20px;
-            transition: transform 0.4s ease;
+            border: 2px solid #ccc;
         }
-
-        .profile-photo:hover {
-            transform: scale(1.05);
+        .profile-item {
+            margin: 10px 0;
         }
-
-        .name {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 0;
+        .profile-item label {
+            font-weight: bold;
         }
-
-        .job-title {
-            font-size: 1rem;
-            font-weight: 300;
-            opacity: 0.8;
-            margin-bottom: 30px;
-        }
-
-        .contact-list {
-            list-style: none;
-            padding: 0;
-            text-align: left;
-            margin: 0;
-        }
-
-        .contact-list li {
+        .buttons {
             display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-        }
-
-        .contact-list i {
-            font-size: 1.2rem;
-            color: var(--highlight-color);
-        }
-
-        .profile-content {
-            padding: 30px;
-            display: grid;
-            gap: 25px;
-        }
-
-        .section-header {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            border-bottom: 2px solid var(--highlight-color);
-            padding-bottom: 5px;
-            margin-bottom: 20px;
-            color: var(--accent-color);
-        }
-
-        .section-box {
-            background-color: var(--primary-bg);
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transition: box-shadow 0.3s ease;
-        }
-
-        .section-box:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .about-text {
-            font-size: 1rem;
-            text-align: justify;
-        }
-
-        .skills-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .skill-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: var(--highlight-color);
-            color: #fff;
-            padding: 8px 15px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 400;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-
-        .skill-item:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 20px;
+            justify-content: space-between;
             margin-top: 20px;
-            justify-content: center;
         }
-
-        .social-links a {
-            font-size: 1.8rem;
-            color: var(--accent-color);
-            transition: color 0.3s ease, transform 0.3s ease;
+        .buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
         }
-
-        .social-links a:hover {
-            color: var(--highlight-color);
-            transform: scale(1.1);
+        .edit-btn {
+            background-color: #4CAF50;
+            color: white;
         }
-        
-        @media (max-width: 768px) {
-            .profile-wrapper {
-                grid-template-columns: 1fr;
-            }
-            .profile-sidebar {
-                border-radius: 10px 10px 0 0;
-            }
-            .profile-content {
-                padding: 20px;
-            }
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .edit-btn:hover {
+            background-color: #45a049;
+        }
+        .logout-btn:hover {
+            background-color: #d32f2f;
         }
     </style>
 </head>
 <body>
-    <div class="profile-wrapper">
-        <div class="profile-sidebar">
-            <img src="{{user.image}}" alt="Profile Photo" class="profile-photo">
-            <h1 class="name">{{user.username}}</h1>
-            <p class="job-title">Senior Data Scientist | Lead Consultant</p>
-            
-            <ul class="contact-list">
-                <li><i class="fas fa-map-marker-alt"></i> New York, NY</li>
-                <li><i class="fas fa-envelope"></i> {{user.email}}</li>
-                <li><i class="fas fa-phone-alt"></i> +1 (212) 555-0199</li>
-                <li><i class="fas fa-globe"></i> www.evelynreed.com</li>
-            </ul>
+    <div class="profile-container">
+        <h1>User Profile</h1>
+        <img src="{{ user.profile_img }}" alt="Profile Photo" class="profile-photo">
+        <div class="profile-item">
+            <label>Username:</label>
+            <span>{{ user.username }}</span>
         </div>
-        
-        <div class="profile-content">
-            <div class="section-box">
-                <h2 class="section-header">About Me</h2>
-                <p class="about-text">
-                    A seasoned Data Scientist with over a decade of experience in developing and deploying complex machine learning models. I specialize in predictive analytics, natural language processing, and strategic data visualization for Fortune 500 companies. My passion lies in translating raw data into actionable business intelligence that drives growth and innovation. I am a detail-oriented professional with a strong academic background and a proven track record of leading high-performing teams.
-                </p>
-            </div>
-            
-            <div class="section-box">
-                <h2 class="section-header">Expertise</h2>
-                <div class="skills-grid">
-                    <div class="skill-item"><i class="fas fa-cogs"></i> Machine Learning</div>
-                    <div class="skill-item"><i class="fas fa-chart-line"></i> Predictive Analytics</div>
-                    <div class="skill-item"><i class="fas fa-code"></i> Python (Scikit-learn, TensorFlow)</div>
-                    <div class="skill-item"><i class="fas fa-database"></i> SQL & Big Data</div>
-                    <div class="skill-item"><i class="fas fa-lightbulb"></i> Business Intelligence</div>
-                    <div class="skill-item"><i class="fas fa-brain"></i> NLP</div>
-                </div>
-            </div>
-
-            <div class="section-box">
-                <h2 class="section-header">Professional Networks</h2>
-                <div class="social-links">
-                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                    <a href="#" title="ResearchGate"><i class="fab fa-researchgate"></i></a>
-                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-                </div>
-            </div>
+        <div class="profile-item">
+            <label>Email:</label>
+            <span>{{ user.email }}</span>
+        </div>
+        <div class="profile-item">
+            <label>Full Name:</label>
+            <span>{{ user.full_name }}</span>
+        </div>
+        <div class="profile-item">
+            <label>Joined Date:</label>
+            <span>{{ user.date_joined }}</span>
+        </div>
+        <div class="buttons">
+            <button class="edit-btn" onclick="location.href='/edit-profile/'">Edit Profile</button>
+            <a href="{% url 'login' %}"><button class="logout-btn">Logout</button></a>
         </div>
     </div>
 </body>

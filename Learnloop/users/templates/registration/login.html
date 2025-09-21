@@ -125,7 +125,7 @@
             overflow: hidden;
             width: 768px;
             max-width: 100%;
-            min-height: 600px;
+            min-height: 700px;
         }
 
         .form-container {
@@ -255,6 +255,22 @@
             font-size: 14px;    
             color: var(--dark-text-color);
         }
+        .form-container.sign-in-container button {
+            margin-top: 10px; /* Adjust spacing between the two buttons */
+        }
+        .mentor btn {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            margin-top: -30px; /* Adjust spacing between the two buttons */
+        }
+        .alert {
+            font-size: 14px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
     </style>
 </head>
 <body>
@@ -282,6 +298,7 @@
                 <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
             </div>
             <span>or use your email for registration</span>
+            <a href="{% url 'mentor' %}"><button type="button">Login As Mentor</button></a>
             
             {{ signup_form.username }}
             {{ signup_form.email }}

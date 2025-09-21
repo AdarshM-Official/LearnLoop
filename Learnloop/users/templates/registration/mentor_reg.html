@@ -1,0 +1,537 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerFlow Mentor Hub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #7B68EE;
+            --white-color: #FFFFFF;
+            --light-gray-color: #f3f3f4;
+            --dark-text-color: #333;
+            --light-text-color: #777;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f6f5f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            font-weight: 700;
+            margin: 0;
+            font-size: 2.2em;
+            color: var(--dark-text-color);
+        }
+
+        h2 {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--dark-text-color);
+        }
+        
+        p {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            letter-spacing: 0.5px;
+            margin: 20px 0 30px;
+            color: var(--light-text-color);
+        }
+
+        span {
+            font-size: 12px;
+            color: var(--light-text-color);
+        }
+
+        a {
+            color: #333;
+            font-size: 14px;
+            text-decoration: none;
+            margin: 15px 0;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid var(--primary-color);
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: var(--white-color);
+            font-size: 12px;
+            font-weight: bold;
+            padding: 12px 45px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: transform 80ms ease-in;
+            cursor: pointer;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        button.ghost {
+            background-color: transparent;
+            border-color: var(--white-color);
+        }
+
+        form {
+            background-color: var(--white-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        form input, form select, form textarea {
+            background-color: var(--light-gray-color);
+            border: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            width: 100%;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark-text-color);
+            resize: vertical;
+        }
+        form input:focus, form select:focus, form textarea:focus {
+            outline: 2px solid var(--primary-color);
+        }
+
+        form label {
+            width: 100%;
+            text-align: left;
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--dark-text-color);
+        }
+        form input[type="file"] {
+            padding: 5px;
+        }
+        form button {
+            margin-top: 15px;
+        }
+
+        .main-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .split-screen {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            height: 80%;
+            min-height: 650px;
+            border-radius: 20px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+                        0 10px 10px rgba(0,0,0,0.22);
+            overflow: hidden;
+            background-color: var(--white-color);
+        }
+
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, var(--secondary-color), var(--primary-color));
+            color: var(--white-color);
+            padding: 50px;
+        }
+        .left-panel h1 {
+            color: var(--white-color);
+            font-size: 2.5em;
+        }
+        .left-panel p {
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+        }
+        .left-panel .toggle-btn {
+            background: transparent;
+            border: 1px solid var(--white-color);
+            color: var(--white-color);
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        .left-panel .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .right-panel {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+            overflow: hidden;
+        }
+        .form-card {
+            background: var(--white-color);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.5s ease-in-out;
+            visibility: hidden;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+        .form-card.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            visibility: visible;
+            z-index: 2;
+        }
+
+        .form-card.signup-card {
+            max-width: 900px;
+            height: 100%;
+            padding: 20px;
+            padding-top: 60px;
+            overflow-y: auto;
+        }
+
+        .form-card.signup-card .signup-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-card.signup-card .full-width {
+            grid-column: span 2;
+        }
+        
+        .social-container {
+            margin: 20px 0;
+        }
+
+        .social-container a {
+            border: 1px solid #DDDDDD;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px;
+            height: 40px;
+            width: 40px;
+            transition: all 0.2s ease-in-out;
+            color: var(--dark-text-color);
+        }
+        .social-container a:hover {
+            background-color: var(--light-gray-color);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 1024px) {
+            .split-screen {
+                flex-direction: column;
+                height: 90%;
+            }
+            .left-panel {
+                height: 200px;
+                padding: 20px;
+            }
+            .right-panel {
+                padding: 20px;
+            }
+            .form-card {
+                position: static;
+                transform: none;
+                margin-top: 20px;
+            }
+            .form-card.active {
+                display: block;
+                opacity: 1;
+                transform: none;
+                visibility: visible;
+                margin-top: 0;
+            }
+            .form-card.login-card { display: none; }
+            .form-card.signup-card { display: none; }
+            .left-panel .toggle-btn { display: block; }
+            .login-link, .signup-link {
+                display: block;
+                text-align: center;
+                margin-top: 20px;
+            }
+            .signup-form-grid {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+            .full-width {
+                grid-column: span 1 !important;
+            }
+        }
+        .signup-card.visible-mobile {
+            display: block;
+        }
+        .login-card.visible-mobile {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <div class="split-screen" id="split-screen">
+        <div class="left-panel">
+            <h1 id="panel-title">Welcome Back!</h1>
+            <p id="panel-text">To keep connected with us, please log in with your personal information.</p>
+            <button class="toggle-btn" id="toggleBtn">Sign Up</button>
+        </div>
+        <div class="right-panel">
+            <div class="form-card login-card active" id="login-card">
+                <form action="#">
+                    <h1>CareerFlow</h1>
+                    <h2>Mentor Login</h2>
+                    <div class="social-container">
+                        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <span>or use your account</span>
+                    <div class="form-field">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" placeholder="Email Address" />
+                    </div>
+                    <div class="form-field">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Password" />
+                    </div>
+                    <a href="#">Forgot your password?</a>
+                    <button>Log In</button>
+                </form>
+            </div>
+            <div class="form-card signup-card" id="signup-card">
+                <form action="#">
+                    <h2>Become a Mentor</h2>
+                    <div class="social-container">
+                        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <span>or use your email for registration</span><br><br>
+                    
+                    <div class="signup-form-grid">
+                        <div class="form-field">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" placeholder="First Name" required />
+                        </div>
+                        <div class="form-field">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" placeholder="Last Name" required />
+                        </div>
+        
+                        <div class="form-field">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" placeholder="Email" required />
+                        </div>
+                        <div class="form-field">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="Phone Number" required />
+                        </div>
+        
+                        <div class="form-field">
+                            <label for="profile-picture">Profile Picture</label>
+                            <input type="file" id="profile-picture" accept="image/*" />
+                        </div>
+                        <div class="form-field">
+                            <label for="linkedin">LinkedIn Profile (Link)</label>
+                            <input type="url" id="linkedin" placeholder="https://linkedin.com/in/yourprofile" />
+                        </div>
+
+                        <div class="form-field">
+                            <label for="education">Highest Educational Qualification</label>
+                            <input type="text" id="education" placeholder="e.g., MBA, PhD" required />
+                        </div>
+                        <div class="form-field">
+                            <label for="specialization">Specialization</label>
+                            <select id="specialization" required>
+                                <option value="">Select a specialization</option>
+                                <option value="software-development">Software Development</option>
+                                <option value="digital-marketing">Digital Marketing</option>
+                                <option value="product-management">Product Management</option>
+                                <option value="data-science">Data Science</option>
+                                <option value="ux-design">UX/UI Design</option>
+                                <option value="finance">Finance & Accounting</option>
+                                <option value="human-resources">Human Resources</option>
+                                <option value="sales">Sales</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-field full-width">
+                            <label for="portfolio">Portfolio/Website (Optional)</label>
+                            <input type="url" id="portfolio" placeholder="https://yourportfolio.com" />
+                        </div>
+
+                        <div class="form-field">
+                            <label for="languages">Languages Spoken</label>
+                            <input type="text" id="languages" placeholder="e.g., English, Spanish, Hindi" required />
+                        </div>
+                        <div class="form-field">
+                            <label for="audience">Preferred Audience</label>
+                            <select id="audience" required>
+                                <option value="">Select your audience</option>
+                                <option value="students">Students</option>
+                                <option value="early-professionals">Early Professionals</option>
+                                <option value="career-switchers">Career Switchers</option>
+                                <option value="executives">Executives</option>
+                                <option value="all">All of the above</option>
+                            </select>
+                        </div>
+        
+                        <div class="form-field full-width">
+                            <label for="bio">Short Bio</label>
+                            <textarea id="bio" rows="4" placeholder="Tell us about yourself and your mentoring style..." required></textarea>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" placeholder="Password" required />
+                        </div>
+                        <div class="form-field">
+                            <label for="password-confirm">Confirm Password</label>
+                            <input type="password" id="password-confirm" placeholder="Confirm Password" required />
+                        </div>
+
+                        <div class="form-field full-width" style="margin-top: 10px;">
+                            <label style="display: flex; align-items: center; font-size: 12px; font-weight: 500;">
+                                <input type="checkbox" required style="width: auto; margin-right: 5px;" />
+                                I agree to the <a href="#" style="margin: 0 5px; color: var(--primary-color);">Code of Conduct</a> and Terms.
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" style="margin-top: 1rem;">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const toggleBtn = document.getElementById('toggleBtn');
+    const loginCard = document.getElementById('login-card');
+    const signupCard = document.getElementById('signup-card');
+    const panelTitle = document.getElementById('panel-title');
+    const panelText = document.getElementById('panel-text');
+
+    toggleBtn.addEventListener('click', () => {
+        if (loginCard.classList.contains('active')) {
+            // Switch to Sign Up
+            loginCard.classList.remove('active');
+            signupCard.classList.add('active');
+            panelTitle.textContent = "Become a Mentor!";
+            panelText.textContent = "Enter your professional details and start your journey with us.";
+            toggleBtn.textContent = "Log In";
+        } else {
+            // Switch to Login
+            signupCard.classList.remove('active');
+            loginCard.classList.add('active');
+            panelTitle.textContent = "Welcome Back!";
+            panelText.textContent = "To keep connected with us, please log in with your personal information.";
+            toggleBtn.textContent = "Sign Up";
+        }
+    });
+
+    // Mobile specific behavior for form switching
+    function handleMobileToggle() {
+        const isMobile = window.innerWidth <= 1024;
+        const loginCard = document.getElementById('login-card');
+        const signupCard = document.getElementById('signup-card');
+
+        if (isMobile) {
+            document.getElementById('toggleBtn').addEventListener('click', () => {
+                if (loginCard.classList.contains('visible-mobile')) {
+                    loginCard.classList.remove('visible-mobile');
+                    signupCard.classList.add('visible-mobile');
+                } else {
+                    signupCard.classList.remove('visible-mobile');
+                    loginCard.classList.add('visible-mobile');
+                }
+            });
+        }
+    }
+
+    // Initial setup on page load
+    window.addEventListener('load', () => {
+        // Show login form by default on desktop
+        if (window.innerWidth > 1024) {
+            document.getElementById('login-card').classList.add('active');
+        } else {
+            // Show login form by default on mobile
+            document.getElementById('login-card').classList.add('visible-mobile');
+            document.getElementById('signup-card').classList.remove('active');
+        }
+        handleMobileToggle();
+    });
+
+    // Re-check on resize
+    window.addEventListener('resize', () => {
+        const isMobile = window.innerWidth <= 1024;
+        const loginCard = document.getElementById('login-card');
+        const signupCard = document.getElementById('signup-card');
+
+        if (isMobile) {
+            loginCard.classList.remove('active');
+            signupCard.classList.remove('active');
+            if (toggleBtn.textContent.includes('Log In')) {
+                signupCard.classList.add('visible-mobile');
+                loginCard.classList.remove('visible-mobile');
+            } else {
+                loginCard.classList.add('visible-mobile');
+                signupCard.classList.remove('visible-mobile');
+            }
+        } else {
+            if (loginCard.classList.contains('visible-mobile')) {
+                loginCard.classList.remove('visible-mobile');
+                loginCard.classList.add('active');
+                signupCard.classList.remove('visible-mobile');
+                signupCard.classList.remove('active');
+            } else if (signupCard.classList.contains('visible-mobile')) {
+                signupCard.classList.remove('visible-mobile');
+                signupCard.classList.add('active');
+                loginCard.classList.remove('visible-mobile');
+                loginCard.classList.remove('active');
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>

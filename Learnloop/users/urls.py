@@ -13,4 +13,5 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('profile/', views.profile_view, name='profile'),  # New profile view
+    path('mentor-login/',views.mentor_login_view, name='mentor'), # Mentor login view
 ]

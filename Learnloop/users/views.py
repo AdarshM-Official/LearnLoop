@@ -55,3 +55,6 @@ def auth_view(request):
 
 def profile_view(request):
     return render(request, 'profile/profile.html')
+
+def mentor_login_view(request):
+    return render(request, 'registration/mentor_reg.html')
