@@ -138,3 +138,5 @@ LOGOUT_REDIRECT_URL = 'login'
 
 # settings.py
 LOGIN_URL = '/users/auth/'  # Redirect to this URL for login if not authenticated
+
+AUTH_USER_MODEL = 'users.User'  # Custom user model

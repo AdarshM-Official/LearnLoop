@@ -297,9 +297,7 @@
                 <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
             </div>
-            <span>or use your email for registration</span>
-            <a href="{% url 'mentor' %}"><button type="button">Login As Mentor</button></a>
-            
+            <span>or use your email for registration</span>            
             {{ signup_form.username }}
             {{ signup_form.email }}
             <label for="" id="profile-picture">Profile Image</label>
@@ -322,6 +320,7 @@
                 <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
             </div>
             <span>or use your account</span>
+            <a href="{% url 'mentor' %}"><button type="button">Login As Mentor</button></a>
 
             {{ login_form.username }}
             {{ login_form.password }}

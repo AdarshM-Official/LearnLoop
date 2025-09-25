@@ -16,3 +16,6 @@ def start_career_choice(request):
 def custom_logout(request):
     logout(request)
     return redirect("templates/careerland.html")  # redirects to the named careerland url
+
+def mentor_home(request):
+    return render(request, 'templates/mentor_home.html')

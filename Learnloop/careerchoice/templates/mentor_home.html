@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 1rem;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        main {
+            padding: 2rem;
+        }
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .actions-section {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .action-card {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem;
+            width: 300px;
+            text-align: center;
+        }
+        .action-card h2 {
+            margin-top: 0;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            background: #333;
+            color: #fff;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/mentor/dashboard">Dashboard</a></li>
+                <li><a href="/mentor/profile">Profile</a></li>
+                <li><a href="/mentor/sessions">Sessions</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="welcome-section">
+            <h1>Welcome, Mentor!</h1>
+            <p>Thank you for guiding the next generation of professionals. Here’s what you can do today:</p>
+        </section>
+
+        <section class="actions-section">
+            <div class="action-card">
+                <h2>View Scheduled Sessions</h2>
+                <p>Check your upcoming mentoring sessions and prepare accordingly.</p>
+                <a href="/mentor/sessions" class="btn">View Sessions</a>
+            </div>
+            <div class="action-card">
+                <h2>Update Your Profile</h2>
+                <p>Keep your profile up-to-date to attract more mentees.</p>
+                <a href="/mentor/profile" class="btn">Update Profile</a>
+            </div>
+            <div class="action-card">
+                <h2>Message Mentees</h2>
+                <p>Communicate with your mentees to provide guidance and support.</p>
+                <a href="/mentor/messages" class="btn">Message Now</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Learnloop. All rights reserved.</p>
+    </footer>
+</body>
+</html>
