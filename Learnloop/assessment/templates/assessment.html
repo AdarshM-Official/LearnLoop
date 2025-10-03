@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Skill Assessment | {{ challenge.title }}</title>
+    <!-- Load Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7fafc; }
+        .code-input { min-height: 300px; }
+        /* Custom scrollbar style for the code textarea */
+        .code-input::-webkit-scrollbar { width: 8px; }
+        .code-input::-webkit-scrollbar-thumb { background-color: #4c51bf; border-radius: 4px; }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-100 p-4 md:p-8">
+    <div class="max-w-4xl mx-auto">
+
+        <!-- Header -->
+        <header class="mb-8 p-6 bg-white rounded-xl shadow-lg border-t-4 border-indigo-500">
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-2 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM6.5 9.5a1 1 0 10-2 0 1 1 0 002 0zM15 9.5a1 1 0 10-2 0 1 1 0 002 0zM10 14a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                </svg>
+                AI Skill Assessment: Python
+            </h1>
+            <p class="text-gray-600">Analyze your code structure and efficiency to determine technical seniority level.</p>
+        </header>
+
+        <!-- Challenge Details -->
+        <div class="mb-8 p-6 bg-white rounded-xl shadow-md" id="challenge-section">
+            <h2 class="text-xl font-bold text-indigo-700 mb-3">{{ challenge.title }}</h2>
+            <p class="text-gray-700 whitespace-pre-wrap">{{ challenge.description }}</p>
+            <input type="hidden" id="challenge-id" value="{{ challenge.id }}">
+        </div>
+
+        <!-- Submission Form -->
+        <div class="mb-8">
+            <label for="code-input" class="block text-sm font-medium text-gray-700 mb-2">Your Python Code Snippet:</label>
+            <textarea id="code-input" class="code-input w-full p-4 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 bg-gray-50 text-base font-mono resize-y"
+                      placeholder="# Paste your efficient Python code here...">
+def process_list(data):
+    # Example submission (Replace this with your own code)
+    result = []
+    for item in data:
+        if item >= 0:
+            result.append(item)
+    return result
+            </textarea>
+            <button id="submit-button" class="mt-4 w-full md:w-auto px-6 py-3 text-lg font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150 ease-in-out shadow-lg disabled:opacity-50"
+                    onclick="submitCode()">
+                Analyze Code Structure
+            </button>
+            <p id="auth-warning" class="mt-2 text-sm text-red-600 hidden">Please log in to submit your code.</p>
+        </div>
+
+        <!-- Result Area -->
+        <div id="results-area" class="hidden">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Assessment Results</h2>
+            <div id="status-card" class="p-6 rounded-xl shadow-2xl transition duration-500">
+                <div class="flex items-center mb-4">
+                    <div id="status-icon" class="h-8 w-8 rounded-full bg-yellow-400 flex items-center justify-center mr-3">
+                        <svg class="h-5 w-5 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    </div>
+                    <h3 id="status-text" class="text-xl font-semibold text-gray-800">Status: Processing...</h3>
+                </div>
+                
+                <div id="result-details" class="space-y-4 pt-4 border-t border-gray-200">
+                    <p class="text-lg font-medium text-gray-700">Seniority Score: <span id="score" class="font-extrabold text-2xl text-indigo-600">--</span> / 1.0</p>
+                    
+                    <div>
+                        <p class="font-medium text-gray-700">AI Feedback:</p>
+                        <p id="feedback" class="p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-indigo-800 italic">Awaiting AI analysis...</p>
+                    </div>
+                    
+                    <div class="pt-2">
+                        <p class="font-medium text-gray-700 mb-1">Raw ML Features (Structural Analysis):</p>
+                        <pre id="features-display" class="bg-gray-800 text-green-300 p-4 rounded-lg text-sm overflow-x-auto">Loading features...</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Check if user is authenticated (Django context variable replacement)
+        // **IMPORTANT:** In a real project, replace 'true' with a Django template tag: 
+        // const IS_AUTHENTICATED = "{% if request.user.is_authenticated %}true{% else %}false{% endif %}"; 
+        const IS_AUTHENTICATED = true; // Set to true for local testing
+        
+        // **CRITICAL FIX 1: Retrieve CSRF Token from the cookie**
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const CSRF_TOKEN = getCookie('csrftoken'); 
+        
+        // --- DOM Elements & State ---
+        if (!IS_AUTHENTICATED) {
+            document.getElementById('auth-warning').classList.remove('hidden');
+            document.getElementById('submit-button').disabled = true;
+        }
+
+        const submitButton = document.getElementById('submit-button');
+        const resultsArea = document.getElementById('results-area');
+        const statusText = document.getElementById('status-text');
+        const statusIcon = document.getElementById('status-icon');
+        const statusCard = document.getElementById('status-card');
+        let pollInterval;
+
+        // --- Status Update Logic (Remains unchanged) ---
+        function updateStatusDisplay(status, score = null, feedback = null, features = null) {
+            statusText.textContent = `Status: ${status}`;
+            
+            // Update card appearance based on status
+            statusCard.className = 'p-6 rounded-xl shadow-2xl transition duration-500';
+            
+            if (status === 'PROCESSING' || status === 'PENDING') { // Added PENDING to this block
+                statusCard.classList.add('bg-yellow-50', 'border-yellow-400');
+                statusIcon.innerHTML = `<svg class="h-5 w-5 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+            } else if (status === 'SUCCESS') {
+                statusCard.classList.add('bg-green-50', 'border-green-400');
+                statusIcon.innerHTML = `<svg class="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`;
+                document.getElementById('score').textContent = score ? score.toFixed(3) : '--';
+                document.getElementById('feedback').textContent = feedback;
+                document.getElementById('features-display').textContent = JSON.stringify(features, null, 2);
+            } else if (status === 'ERROR' || status === 'FAILED') {
+                statusCard.classList.add('bg-red-50', 'border-red-400');
+                statusIcon.innerHTML = `<svg class="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>`;
+                document.getElementById('feedback').textContent = `ERROR: ${feedback}`;
+                document.getElementById('features-display').textContent = 'Error processing features.';
+            }
+        }
+
+        // --- Polling Logic ---
+        async function pollStatus(submissionId) {
+            // **CRITICAL FIX 2: Use the correct, prefixed URL for the status API**
+            const url = `/assessment/status/${submissionId}/`; 
+            
+            if (pollInterval) {
+                clearInterval(pollInterval);
+            }
+
+            pollInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('Network error or Submission ID not found.');
+
+                    const data = await response.json();
+                    
+                    updateStatusDisplay(data.status, data.score, data.feedback, data.features);
+
+                    if (data.status === 'SUCCESS' || data.status === 'ERROR' || data.status === 'FAILED') {
+                        clearInterval(pollInterval);
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Analyze Code Structure';
+                    }
+                } catch (error) {
+                    console.error('Polling failed:', error);
+                    // Do not reset button on intermittent polling failure unless fatal
+                }
+            }, 3000); // Poll every 3 seconds
+        }
+
+        // --- Submission Logic ---
+        async function submitCode() {
+            const codeSnippet = document.getElementById('code-input').value;
+            const challengeId = document.getElementById('challenge-id').value;
+            
+            if (codeSnippet.trim() === "") {
+                alert("Please paste some code to analyze.");
+                return;
+            }
+
+            // Reset UI and show processing state
+            resultsArea.classList.remove('hidden');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Processing...';
+            updateStatusDisplay('PENDING'); // Initial status before fetch starts
+
+            try {
+                // **CRITICAL FIX 3: Use the correct, prefixed URL for the submission API**
+                const response = await fetch('/assessment/submit-code/', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // **CRITICAL FIX 4: Use the actual retrieved CSRF token**
+                        'X-CSRFToken': CSRF_TOKEN 
+                    },
+                    body: JSON.stringify({
+                        challenge_id: challengeId,
+                        code_snippet: codeSnippet
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Submission successful, start polling
+                    updateStatusDisplay('PROCESSING');
+                    pollStatus(data.submission_id);
+                } else {
+                    // API returned an error (e.g., 401, 400)
+                    clearInterval(pollInterval);
+                    updateStatusDisplay('ERROR', 0, data.error || 'Unknown submission error.', {});
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Analyze Code Structure';
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                clearInterval(pollInterval);
+                updateStatusDisplay('ERROR', 0, 'Could not connect to the server API.', {});
+                submitButton.disabled = false;
+                submitButton.textContent = 'Analyze Code Structure';
+            }
+        }
+    </script>
+</body>
+</html>

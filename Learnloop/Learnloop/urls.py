@@ -21,9 +21,9 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("core.urls")),  # ✅ This now works
-    path("api/", include("api.urls")),  # ✅ This now works
     path("choice/", include("careerchoice.urls")),  # ✅ This now works
     path('users/', include('users.urls')),
+    path('assessment/', include('assessment.urls')),  # ✅ Added assessment app URLs
 ]
 
 
