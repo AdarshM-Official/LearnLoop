@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Registration</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #6366f1;
+            --accent: #f59e0b;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--text-main);
+        }
+
+        .main-wrapper {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 800px;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .left-panel {
+            flex: 1.4;
+            padding: 4rem;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .left-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+        .left-panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        form p {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Span some fields full width */
+        form p:has(input[name="username"]),
+        form p:has(input[name="email"]),
+        form p:has(textarea),
+        form p:has(input[name="password1"]),
+        form p:has(input[name="password2"]),
+        form p:has(input[name="bio"]),
+        form p:has(input[name="expertise"]),
+        form p:has(input[name="linkedin"]),
+        form p:has(input[name="portfolio"]),
+        form p:has(.file-input) {
+            grid-column: span 2;
+        }
+
+        form p label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            display: none; /* Default hidden as per request */
+        }
+
+        /* Show label only for specific fields like files or if needed for clarity */
+        form p:has(.file-input) label {
+            display: block;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #f8fafc;
+            box-sizing: border-box;
+        }
+
+        input:hover, select:hover, textarea:hover {
+            border-color: var(--secondary);
+            background: #f1f5f9;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            user-select: none;
+            font-weight: 600;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button[type="submit"] {
+            grid-column: span 2;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+
+        button[type="submit"]:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+
+        .right-panel {
+            flex: 1;
+            background: var(--primary);
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .right-panel svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.1;
+        }
+
+        .right-panel-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .right-panel-content img {
+            width: 280px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 8px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .right-panel h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .right-panel p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .footer-link {
+            grid-column: span 2;
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .footer-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .footer-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Notifications/Messages */
+        .messages {
+            grid-column: span 2;
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+
+        @media (max-width: 1024px) {
+            .main-wrapper { flex-direction: column; max-width: 600px; }
+            .right-panel { display: none; }
+            .left-panel { padding: 2.5rem; }
+            form { grid-template-columns: 1fr; }
+            form p { grid-column: span 1 !important; }
+            button[type="submit"] { grid-column: span 1; }
+            .footer-link { grid-column: span 1; }
+            .messages { grid-column: span 1; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-wrapper">
+        <div class="left-panel">
+            <h1>Mentor Registration</h1>
+            <p class="subtitle">Empower the next generation by sharing your expertise and guidance.</p>
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {% if message.tags == 'error' %}
+                        <strong>Oops!</strong> {{ message }}
+                    {% else %}
+                        <strong>Success!</strong> {{ message }}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ mentor_signup.as_p }}
+                <button type="submit" name="mentor_submit">Complete Registration</button>
+            </form>
+
+            <p class="footer-link">Already part of the mentor community? <a href="{% url 'auth' %}">Sign in here</a></p>
+        </div>
+
+        <div class="right-panel">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#FFFFFF" d="M44.7,-76.4C58.2,-69.2,69.7,-57.4,77.3,-43.3C84.8,-29.2,88.4,-12.7,87.3,3.3C86.2,19.3,80.4,34.8,71.2,48.1C62,61.4,49.4,72.4,34.9,78.3C20.4,84.2,4,85,-12.5,82.1C-29,79.2,-45.6,72.6,-58.5,61.5C-71.4,50.4,-80.6,34.8,-83.8,18.4C-87,2.1,-84.1,-15,-76.5,-29.7C-68.9,-44.4,-56.6,-56.7,-42.7,-64.2C-28.8,-71.7,-14.4,-74.4,0.6,-75.4C15.6,-76.3,31.2,-75.6,44.7,-76.4Z" transform="translate(100 100)" />
+            </svg>
+            <div class="right-panel-content">
+                <img src="/static/images/mentor_auth.png" alt="Experience Mentorship">
+                <h2>Shape the Future</h2>
+                <p>By joining as a mentor, you're not just sharing knowledge—you're building the next generation of industry leaders.</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
