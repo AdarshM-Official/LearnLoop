@@ -396,7 +396,8 @@ body {
 
         <!-- Info -->
         <div class="mentor-info">
-            <h1 class="mentor-name">{{ mentor.username }}</h1>
+            <!-- <h1 class="mentor-name">{{ mentor.username }}</h1> -->
+            <h1 class="mentor-name">{{ mentor.first_name }} {{ mentor.last_name }}</h1>
             <p class="mentor-role">{{ mentor.profession|default:"Professional Mentor" }} · {{ mentor.experience_years|default:"N/A" }} yrs exp</p>
 
             <!-- Skill Tags -->
@@ -478,7 +479,7 @@ body {
         <div class="slots-grid">
             {% for slot in availability_slots %}
             <div class="slot-item">
-                <span class="slot-day">{{ slot.get_day_of_week_display }}</span>
+                <span class="slot-day">{{ slot.date|date:"M d, Y" }}</span>
                 <span class="slot-time">{{ slot.start_time|time:"h:i A" }} – {{ slot.end_time|time:"h:i A" }}</span>
             </div>
             {% endfor %}

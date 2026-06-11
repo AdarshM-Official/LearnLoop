@@ -5,16 +5,16 @@
 }
 
 :root {
-    --primary-color: #667eea;
-    --secondary-color: #764ba2;
-    --accent-color: #f093fb;
-    --dark-bg: #0f172a;
-    --light-bg: #f8f9fa;
-    --text-dark: #1e293b;
+    --primary-color: #4f46e5;
+    --secondary-color: #9333ea;
+    --accent-color: #ec4899;
+    --dark-bg: #09090b;
+    --light-bg: #f4f4f5;
+    --text-dark: #18181b;
     --text-light: #ffffff;
     --card-bg: #ffffff;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.2);
+    --shadow: 0 10px 40px rgba(79, 70, 229, 0.08);
+    --shadow-hover: 0 20px 60px rgba(147, 51, 234, 0.15);
 }
 
 body {
@@ -79,7 +79,7 @@ html {
 
 .hero-section {
     position: relative;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #1e1e24 50%, #2a2a35 100%);
     color: var(--text-light);
     overflow: hidden;
 }
@@ -338,7 +338,7 @@ html {
 
 .questionnaire-section {
     padding: 6rem 0;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e2e8f0 100%);
+    background: var(--light-bg);
 }
 
 .quiz-visual {
@@ -529,7 +529,7 @@ html {
 
 .opportunities-section {
     padding: 6rem 0;
-    background: linear-gradient(135deg, var(--dark-bg) 0%, #1e293b 100%);
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #18181b 100%);
     color: var(--text-light);
 }
 
@@ -611,15 +611,15 @@ html {
 }
 
 .trend-badge.hot {
-    background: linear-gradient(135deg, #f093fb, #f5576c);
+    background: linear-gradient(135deg, var(--accent-color), #f43f5e);
 }
 
 .trend-badge.rising {
-    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    background: linear-gradient(135deg, #10b981, #14b8a6);
 }
 
 .trend-badge.stable {
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    background: linear-gradient(135deg, #3b82f6, #0ea5e9);
 }
 
 .progress-bar-custom {
@@ -732,7 +732,7 @@ html {
 
 .resources-section {
     padding: 6rem 0;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e2e8f0 100%);
+    background: var(--light-bg);
 }
 
 .resource-card {

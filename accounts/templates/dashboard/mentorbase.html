@@ -6,148 +6,338 @@
 <title>Mentor Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
 {% block style %}
 {% endblock %}
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
-/* Dark background */
-body{
-    background:radial-gradient(circle at top,#0f172a,#020617);
-    color:#e5e7eb;
+/* ===== CSS Variables for Themes ===== */
+:root {
+    --bg-gradient: #020617; /* Solid base, overlaid with pseudo-element */
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --sidebar-bg: rgba(15, 23, 42, 0.6);
+    --sidebar-border: rgba(255, 255, 255, 0.05);
+    
+    --brand-color: #818cf8;
+    --brand-glow: rgba(129, 140, 248, 0.5);
+    
+    --nav-item-bg: transparent;
+    --nav-item-hover: rgba(255, 255, 255, 0.05);
+    --nav-item-active: rgba(99, 102, 241, 0.15);
+    --nav-item-active-border: #818cf8;
+    
+    /* Content vars */
+    --card-bg: rgba(15, 23, 42, 0.7);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --item-bg: rgba(30, 41, 59, 0.5);
+    --title-color: #e2e8f0;
 }
 
-/* ---------- TOP NAV ---------- */
-.top-nav{
-    background:#020617;
-    border-bottom:1px solid rgba(255, 255, 255, 0.08);
-    padding:15px 40px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+[data-theme="light"] {
+    --bg-gradient: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-muted: #64748b;
+    --sidebar-bg: rgba(255, 255, 255, 0.8);
+    --sidebar-border: rgba(0, 0, 0, 0.06);
+    
+    --brand-color: #4f46e5;
+    --brand-glow: rgba(79, 70, 229, 0.3);
+    
+    --nav-item-bg: transparent;
+    --nav-item-hover: rgba(0, 0, 0, 0.03);
+    --nav-item-active: rgba(79, 70, 229, 0.08);
+    --nav-item-active-border: #4f46e5;
+
+    /* Content vars */
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-border: rgba(0, 0, 0, 0.08);
+    --item-bg: rgba(248, 250, 252, 0.8);
+    --title-color: #1e293b;
 }
 
-.brand{
-    font-size:22px;
-    font-weight:bold;
-    color:#818cf8;
+body {
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
 }
 
-/* Navigation buttons */
-.nav-links{
-    display:flex;
-    gap:15px;
+/* Subtle background mesh */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: radial-gradient(circle at top right, var(--brand-glow), transparent 40%);
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: -1;
 }
 
-/* ===== Premium Nav Buttons ===== */
-.nav-link{
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(99,102,241,0.05));
-    border: 1px solid rgba(99,102,241,0.25);
-    color: #c7d2fe;
-    padding: 10px 20px;
+/* ========== SIDEBAR ========== */
+.sidebar {
+    width: 280px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+}
+
+.sidebar-header {
+    padding: 32px 24px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--brand-color), #38bdf8);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.brand-text {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, var(--text-primary), var(--brand-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px;
+    gap: 8px;
+    flex: 1;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
     border-radius: 12px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
+    color: var(--text-muted);
     text-decoration: none;
-    transition: all 0.35s ease;
-    backdrop-filter: blur(6px);
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    border-left: 3px solid transparent;
 }
 
-/* Neon glow border */
-.nav-link::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    border-radius:12px;
-    padding:1px;
-    background: linear-gradient(120deg,#282a82,#22d3ee,#6366f1);
-    -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity:0;
-    transition:0.4s;
+.nav-link svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.2;
+    opacity: 0.7;
+    transition: all 0.2s;
 }
 
-/* Hover effect */
-.nav-link:hover{
-    color:#fff;
-    background: linear-gradient(135deg, rgba(99,102,241,0.4), rgba(34,211,238,0.2));
-    box-shadow: 0 0 18px rgba(99,102,241,0.6);
-    transform: translateY(-2px);
+.nav-link:hover {
+    background: var(--nav-item-hover);
+    color: var(--text-primary);
 }
 
-.nav-link:hover::before{
-    opacity:1;
+.nav-link:hover svg {
+    opacity: 1;
+    transform: scale(1.1);
 }
 
-/* Active button */
-.nav-link.active{
-    background: linear-gradient(135deg,#6366f1,#22d3ee);
-    color:#0f2db7;
-    box-shadow: 0 0 25px rgba(99,102,241,0.9);
-    font-weight:600;
+.nav-link.active {
+    background: var(--nav-item-active);
+    color: var(--brand-color);
+    border-left-color: var(--nav-item-active-border);
 }
 
-/* Main content */
-.main-content{
-    padding:40px;
+.nav-link.active svg {
+    opacity: 1;
+}
+
+.sidebar-footer {
+    padding: 24px;
+    border-top: 1px solid var(--sidebar-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.theme-toggle {
+    background: var(--item-bg);
+    border: 1px solid var(--sidebar-border);
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+    background: var(--nav-item-hover);
+    transform: rotate(15deg);
+}
+
+/* ========== MAIN WRAPPER ========== */
+.main-wrapper {
+    flex: 1;
+    margin-left: 280px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ========== TOP HEADER (Mobile) ========== */
+.mobile-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--sidebar-bg);
+    border-bottom: 1px solid var(--sidebar-border);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 90;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 8px;
+}
+
+/* ========== MAIN CONTENT ========== */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .main-wrapper {
+        margin-left: 0;
+    }
+    .mobile-header {
+        display: flex;
+    }
 }
 </style>
 </head>
-
 <body>
 
-<!-- TOP NAV BAR -->
-<nav class="top-nav">
-    <div class="brand">LearnLoop</div>
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="brand-icon">L</div>
+        <div class="brand-text">LearnLoop</div>
+    </div>
+    
+    <div class="nav-links">
+        <a href="{% url 'mentor_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_dashboard' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+            Dashboard
+        </a>
+        <a href="{% url 'mentor_profile_setup' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_profile_setup' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Profile & Setup
+        </a>
+        <a href="{% url 'mentor_content' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_content' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Content Hub
+        </a>
+        <a href="{% url 'chat_inbox' %}" class="nav-link {% if request.resolver_match.url_name == 'chat_inbox' or request.resolver_match.url_name == 'chat_room' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Messages
+        </a>
+    </div>
 
-   <div class="nav-links">
-    <a href="{% url 'mentor_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_dashboard' %}active{% endif %}">Session Dashboard</a>
-    <a href="{% url 'mentor_profile_setup' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_profile_setup' %}active{% endif %}">Profile & Setup</a>
-    <a href="{% url 'mentor_content' %}" class="nav-link {% if request.resolver_match.url_name == 'mentor_content' %}active{% endif %}">Content Contribution</a>
-    <a href="{% url 'logout' %}" class="nav-link btn ">Logout</a>
+    <div class="sidebar-footer">
+        <button class="theme-toggle" id="theme-toggle-btn" onclick="toggleMentorTheme()" aria-label="Toggle Theme">
+            🌙
+        </button>
+        <a href="{% url 'logout' %}" class="nav-link" style="padding: 10px; color: #ef4444;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </a>
+    </div>
+</aside>
+
+<!-- MAIN WRAPPER -->
+<div class="main-wrapper">
+    <!-- MOBILE HEADER -->
+    <header class="mobile-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="brand-icon" style="width: 32px; height: 32px; font-size: 16px;">L</div>
+            <div class="brand-text" style="font-size: 18px;">LearnLoop</div>
+        </div>
+        <button class="menu-btn" onclick="toggleSidebar()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+    </header>
+
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
 </div>
 
-</nav>
-
-<!-- PAGE CONTENT -->
-<main class="main-content">
-    {% block content %}
-    {% endblock %}
-</main>
-
-<!-- SCRIPT (Kept & Working) -->
- <script>
-const navLinks = document.querySelectorAll('.nav-link');
-const contentViews = document.querySelectorAll('.content-view');
-
-function showView(targetId){
-    navLinks.forEach(link=>{
-        link.classList.toggle('active', link.dataset.target === targetId);
-    });
-
-    contentViews.forEach(view=>{
-        view.style.display = (view.id === targetId) ? "block" : "none";
-    });
+<script>
+// Sidebar Toggle
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
 }
 
-// Only buttons with data-target toggle views
-navLinks.forEach(link=>{
-    if(link.dataset.target){
-        link.addEventListener('click',()=>showView(link.dataset.target));
-    }
-});
+// Mentor Theme Toggle Logic
+function toggleMentorTheme() {
+    const root = document.documentElement;
+    const current = root.getAttribute('data-theme') || 'dark';
+    const newTheme = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', newTheme);
+    localStorage.setItem('mentor-theme', newTheme);
+    document.getElementById('theme-toggle-btn').innerText = newTheme === 'dark' ? '🌙' : '☀️';
+}
+
+(function() {
+    const saved = localStorage.getItem('mentor-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('theme-toggle-btn');
+        if (btn) btn.innerText = saved === 'dark' ? '🌙' : '☀️';
+    });
+})();
 </script>
 
 </body>

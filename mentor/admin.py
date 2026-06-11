@@ -40,8 +40,8 @@ class MentorProfileAdmin(admin.ModelAdmin):
 
 @admin.register(AvailabilitySlot)
 class AvailabilitySlotAdmin(admin.ModelAdmin):
-    list_display = ['mentor', 'day_of_week', 'start_time', 'end_time', 'is_active']
-    list_filter = ['day_of_week', 'is_active', 'created_at']
+    list_display = ['mentor', 'date', 'start_time', 'end_time', 'is_active']
+    list_filter = ['date', 'is_active', 'created_at']
     search_fields = ['mentor__username']
 
 

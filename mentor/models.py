@@ -69,15 +69,7 @@ class MentorProfile(models.Model):
 
 class AvailabilitySlot(models.Model):
     """Weekly recurring availability slots for mentors"""
-    DAYS_OF_WEEK = [
-        ('monday', 'Monday'),
-        ('tuesday', 'Tuesday'),
-        ('wednesday', 'Wednesday'),
-        ('thursday', 'Thursday'),
-        ('friday', 'Friday'),
-        ('saturday', 'Saturday'),
-        ('sunday', 'Sunday'),
-    ]
+
     
     mentor = models.ForeignKey(
         CustomUser,
@@ -85,7 +77,7 @@ class AvailabilitySlot(models.Model):
         related_name='mentor_availability_slots',
         limit_choices_to={'role': 'mentor'}
     )
-    day_of_week = models.CharField(max_length=10, choices=DAYS_OF_WEEK)
+    date = models.DateField(default="2026-06-01")
     start_time = models.TimeField()
     end_time = models.TimeField()
     is_active = models.BooleanField(default=True)
@@ -94,10 +86,10 @@ class AvailabilitySlot(models.Model):
     class Meta:
         verbose_name = "Availability Slot"
         verbose_name_plural = "Availability Slots"
-        ordering = ['day_of_week', 'start_time']
+        ordering = ['date', 'start_time']
 
     def __str__(self):
-        return f"{self.mentor.username} - {self.day_of_week}: {self.start_time} to {self.end_time}"
+        return f"{self.mentor.username} - {self.date}: {self.start_time} to {self.end_time}"
 
 
 class MentorshipSession(models.Model):

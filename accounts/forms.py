@@ -39,6 +39,14 @@ class CustomUserCreationForm(UserCreationForm, DynamicPlaceholderMixin):
         super().__init__(*args, **kwargs)
         self.apply_placeholders()
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if username:
+            username = username.lower()
+            if CustomUser.objects.filter(username__iexact=username).exists():
+                raise forms.ValidationError("A user with that username already exists.")
+        return username
+
 class CustomAuthenticationForm(AuthenticationForm, DynamicPlaceholderMixin):
     username = forms.CharField(widget=forms.TextInput(attrs={'autofocus': True}))
     password = forms.CharField(widget=forms.PasswordInput)
@@ -55,6 +63,14 @@ class MentorCreationForm(UserCreationForm, DynamicPlaceholderMixin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.apply_placeholders()
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if username:
+            username = username.lower()
+            if CustomUser.objects.filter(username__iexact=username).exists():
+                raise forms.ValidationError("A user with that username already exists.")
+        return username
         
     def save(self, commit=True):
         user = super().save(commit=False)

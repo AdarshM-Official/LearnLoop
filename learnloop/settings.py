@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-4h19^p)$iox!u9vsn@2ekmeyg8u-()3@u*xaxpvii7@2tr=9x*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']   # Update with your actual domain and localhost for development
 
 
 # Application definition
@@ -59,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Add WhiteNoise middleware for static file handling
 ]
 
 ROOT_URLCONF = 'learnloop.urls'
@@ -134,6 +135,10 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static') # Updated static root for production build
+
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

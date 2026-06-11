@@ -1,184 +1,222 @@
 {% extends 'dashboard/userbase.html' %}
 
 {% block style %}
-
 <style>
+    :root {
+        --primary: #4d79ff;
+        --primary-hover: #3b66eb;
+        --bg-main: #f5f6fa;
+        --card-bg: #ffffff;
+        --text-dark: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+    }
+
     body {
-        background: #f5f6fa;
+        background: var(--bg-main);
         font-family: "Inter", sans-serif;
         min-height: 100vh;
+        color: var(--text-dark);
+        /* Subtle background pattern */
+        background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+        background-size: 20px 20px;
     }
 
     .booking-wrapper {
-        max-width: 1100px;
-        margin: 50px auto;
-        padding: 20px;
+        max-width: 1000px;
+        margin: 100px auto 60px;
+        padding: 0 20px;
     }
 
     /* Messages */
     .alert {
-        padding: 14px 20px;
-        border-radius: 10px;
-        margin-bottom: 25px;
+        padding: 16px 24px;
+        border-radius: 12px;
+        margin-bottom: 30px;
         display: flex;
         align-items: center;
-        gap: 10px;
-        animation: slideDown 0.3s ease;
+        gap: 12px;
+        font-weight: 500;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .alert-success {
-        background: #d1fae5;
-        color: #065f46;
-        border: 1px solid #10b981;
-    }
-
-    .alert-error {
-        background: #fee2e2;
-        color: #991b1b;
-        border: 1px solid #f87171;
-    }
-
-    .alert-info {
-        background: #dbeafe;
-        color: #1e40af;
-        border: 1px solid #60a5fa;
-    }
+    
+    .alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .alert-info { background: #eff6ff; color: #1e3a8a; border: 1px solid #bfdbfe; }
 
     .row-flex {
-        display: flex;
-        gap: 30px;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 32px;
+        align-items: start;
     }
 
-    /* Left Card: Booking Form */
-    .booking-card {
-        flex: 1;
-        min-width: 330px;
-        background: #ffffff;
-        border-radius: 14px;
-        padding: 35px;
-        box-shadow: 0 4px 18px rgba(0,0,0,0.06);
-        border: 1px solid #e6e6e6;
-        animation: fadeIn .4s ease;
+    @media (max-width: 900px) {
+        .row-flex { grid-template-columns: 1fr; }
+    }
+
+    /* Cards */
+    .booking-card, .mentor-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .mentor-card {
+        padding: 35px 30px;
+    }
+
+    /* Decorative element */
+    .booking-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        background: linear-gradient(90deg, var(--primary), #8ba3ff);
     }
 
     .booking-title {
-        font-size: 1.7rem;
-        font-weight: 600;
-        margin-bottom: 10px;
-        color: #333;
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin-bottom: 8px;
+        color: var(--text-dark);
     }
 
     .booking-subtitle {
-        font-size: 0.95rem;
-        color: #666;
-        margin-bottom: 25px;
+        font-size: 1rem;
+        color: var(--text-muted);
+        margin-bottom: 35px;
     }
 
+    /* Modern Form Controls */
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 24px;
+        position: relative;
     }
 
     label {
         font-weight: 600;
-        color: #444;
-        margin-bottom: 8px;
+        color: var(--text-dark);
+        margin-bottom: 10px;
         display: block;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.01em;
     }
 
-    .required {
-        color: #ef4444;
-    }
+    .required { color: #ef4444; }
 
     .form-control {
         width: 100%;
-        padding: 12px 15px;
-        border-radius: 8px;
-        border: 1px solid #d1d1d1;
-        background: #fff;
-        color: #333;
+        padding: 14px 18px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: #f8fafc;
+        color: var(--text-dark);
         font-size: 15px;
-        font-family: inherit;
-        transition: all 0.2s ease;
+        transition: all 0.25s ease;
+    }
+
+    .form-control:hover {
+        border-color: #cbd5e1;
     }
 
     .form-control:focus {
-        border-color: #4d79ff;
+        border-color: var(--primary);
+        background: #ffffff;
         outline: none;
-        box-shadow: 0 0 0 3px rgba(77,121,255,0.15);
+        box-shadow: 0 0 0 4px rgba(77, 121, 255, 0.1);
     }
 
     textarea.form-control {
         resize: vertical;
-        min-height: 80px;
+        min-height: 100px;
+        line-height: 1.5;
     }
 
     select.form-control {
         cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
     }
 
     .help-text {
-        font-size: 0.85rem;
-        color: #999;
-        margin-top: 5px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
 
+    /* Buttons */
     .btn-submit {
         width: 100%;
-        padding: 14px;
-        background: #4d79ff;
+        padding: 16px;
+        background: var(--primary);
         color: #fff;
         border: none;
-        border-radius: 10px;
-        font-size: 16px;
+        border-radius: 12px;
+        font-size: 1.05rem;
         font-weight: 600;
-        transition: .2s ease;
+        letter-spacing: 0.02em;
+        transition: all 0.3s ease;
         cursor: pointer;
-        margin-top: 10px;
+        margin-top: 15px;
+        box-shadow: 0 8px 20px rgba(77, 121, 255, 0.25);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
     }
 
     .btn-submit:hover {
-        background: #3d63d9;
+        background: var(--primary-hover);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(77,121,255,0.3);
+        box-shadow: 0 12px 25px rgba(77, 121, 255, 0.35);
     }
 
     .btn-back {
-        display: inline-block;
-        padding: 10px 20px;
-        background: #e5e7eb;
-        color: #374151;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 14px;
+        background: #f1f5f9;
+        color: #475569;
         text-decoration: none;
-        border-radius: 8px;
+        border-radius: 12px;
         font-weight: 600;
-        transition: 0.2s ease;
+        transition: all 0.2s ease;
         margin-top: 15px;
     }
 
     .btn-back:hover {
-        background: #d1d5db;
+        background: #e2e8f0;
+        color: #1e293b;
     }
 
-    /* Right Card: Mentor Profile */
-    .mentor-card {
-        width: 320px;
-        background: #ffffff;
-        border-radius: 14px;
-        padding: 25px;
-        box-shadow: 0 4px 18px rgba(0,0,0,0.06);
-        border: 1px solid #e6e6e6;
-        height: fit-content;
-        animation: fadeIn .5s ease;
-    }
-
+    /* Mentor Profile Styling */
     .mentor-photo {
-        width: 100%;
-        height: 220px;
-        border-radius: 12px;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
         overflow: hidden;
-        margin-bottom: 18px;
+        margin: 0 auto 20px;
+        border: 4px solid #ffffff;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         background: #f3f4f6;
+        position: relative;
     }
 
     .mentor-photo img {
@@ -193,124 +231,169 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, var(--primary) 0%, #8ba3ff 100%);
         color: white;
-        font-size: 4rem;
-        font-weight: bold;
+        font-size: 3rem;
+        font-weight: 700;
+    }
+
+    .mentor-card-header {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 25px;
+        border-bottom: 1px dashed var(--border);
     }
 
     .mentor-name {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 5px;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 4px;
     }
 
     .mentor-profession {
         font-size: 0.95rem;
-        color: #666;
-        margin-bottom: 15px;
+        color: var(--primary);
+        font-weight: 500;
     }
 
     .mentor-meta {
-        border-top: 1px solid #e6e6e6;
-        padding-top: 15px;
+        display: grid;
+        gap: 16px;
     }
 
-    .mentor-meta p {
-        margin: 8px 0;
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .meta-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        font-weight: 700;
+    }
+
+    .meta-value {
         font-size: 0.95rem;
-        color: #555;
+        color: var(--text-dark);
         line-height: 1.5;
     }
 
     .fee-info {
-        background: #f0f7ff;
-        border: 1px solid #d0e7ff;
-        border-radius: 10px;
-        padding: 15px;
-        margin-top: 15px;
+        background: linear-gradient(to right, #f8fafc, #f1f5f9);
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 25px;
+        border: 1px solid #e2e8f0;
     }
 
     .fee-info h5 {
-        font-size: 0.9rem;
-        color: #1e5a9e;
-        margin-bottom: 8px;
-        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin-bottom: 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    .fee-info p {
-        margin: 5px 0;
-        font-size: 0.9rem;
-        color: #1e5a9e;
+    .fee-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        font-size: 0.95rem;
+        color: var(--text-dark);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
     }
 
-    /* Availability Slots */
+    .fee-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .fee-row strong {
+        font-size: 1.1rem;
+        color: var(--primary);
+        font-weight: 700;
+    }
+
     .slots-box {
-        background: #f5f3ff;
-        border: 1px solid #ddd6fe;
-        border-radius: 10px;
-        padding: 14px;
-        margin-top: 15px;
+        margin-top: 25px;
     }
 
     .slots-box h5 {
-        font-size: 0.9rem;
-        color: #5b21b6;
-        margin-bottom: 10px;
-        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin-bottom: 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .slots-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
     }
 
     .slot-pill {
-        display: inline-flex;
+        display: flex;
         align-items: center;
-        gap: 5px;
-        background: #ede9fe;
-        color: #6d28d9;
-        border: 1px solid #c4b5fd;
-        border-radius: 20px;
-        padding: 4px 11px;
-        font-size: 12px;
+        justify-content: space-between;
+        background: #ffffff;
+        color: var(--text-dark);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .slot-pill:hover {
+        border-color: var(--primary);
+        transform: translateX(4px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+
+    .slot-date {
+        color: var(--primary);
         font-weight: 600;
-        margin: 3px 3px 3px 0;
     }
 
     .no-slots {
-        font-size: 13px;
-        color: #9ca3af;
+        font-size: 0.9rem;
+        color: var(--text-muted);
         text-align: center;
-        padding: 8px 0;
+        padding: 24px;
+        background: #f8fafc;
+        border-radius: 10px;
+        border: 1px dashed #cbd5e1;
     }
 
     /* Animations */
     @keyframes fadeIn {
-        0% { opacity: 0; transform: translateY(20px); }
+        0% { opacity: 0; transform: translateY(15px); }
         100% { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes slideDown {
-        0% { opacity: 0; transform: translateY(-10px); }
+        0% { opacity: 0; transform: translateY(-15px); }
         100% { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .booking-wrapper {
-            padding: 10px;
-        }
-
-        .mentor-card {
-            width: 100%;
-        }
-
-        .booking-card {
-            padding: 25px;
-        }
     }
 </style>
 {% endblock %}
-{% block content %}
 
+{% block content %}
 <div class="booking-wrapper">
 
     <!-- Messages -->
@@ -325,12 +408,12 @@
         {% endfor %}
     {% endif %}
 
-    <div class="row-flex">
+    <div class="row-flex ">
 
         <!-- LEFT: Booking Form -->
-        <div class="booking-card">
-            <h3 class="booking-title">Book Appointment</h3>
-            <p class="booking-subtitle">Schedule a session with {{ mentor.username }}</p>
+        <div class="booking-card" style="background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 24px;width: 900px;margin-left: -100px;">
+            <h3 class="booking-title">Book a Session</h3>
+            <p class="booking-subtitle">Schedule your 1-on-1 mentorship with {{ mentor.username }}</p>
 
             <form method="POST">
                 {% csrf_token %}
@@ -341,106 +424,128 @@
                         <option value="30">30 Minutes</option>
                         <option value="60">60 Minutes</option>
                     </select>
-                    <p class="help-text">Select the duration of your mentoring session.</p>
+                    <div class="help-text">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2"/></svg>
+                        Select the length of your mentoring session.
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="topic">Topic (optional)</label>
+                    <label for="slot_id">Available Slot <span class="required">*</span></label>
+                    <select id="slot_id" name="slot_id" class="form-control" required>
+                        <option value="">-- Choose a time slot --</option>
+                        {% for slot in availability_slots %}
+                        <option value="{{ slot.id }}">
+                            {{ slot.date|date:"M d, Y" }} ({{ slot.start_time|time:'h:i A' }} - {{ slot.end_time|time:'h:i A' }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% if not availability_slots %}
+                    <div class="help-text" style="color: #ef4444;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        This mentor currently has no available slots.
+                    </div>
+                    {% else %}
+                    <div class="help-text">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        Select your preferred date and time
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="topic">Topic (Optional)</label>
                     <input type="text" id="topic" name="topic" class="form-control" placeholder="e.g. Career guidance, Python project review…">
-                    <p class="help-text">What would you like to discuss?</p>
+                    <div class="help-text">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        What would you like to discuss?
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="date">Date <span class="required">*</span></label>
-                    <input type="date" id="date" name="date" class="form-control" required>
-                    <p class="help-text">Select your preferred date</p>
+                    <label for="note">Additional Notes (Optional)</label>
+                    <textarea id="note" name="note" class="form-control" placeholder="Any specific questions or things to prepare for..."></textarea>
                 </div>
 
-                <div class="form-group">
-                    <label for="time">Time <span class="required">*</span></label>
-                    <input type="time" id="time" name="time" class="form-control" required>
-                    <p class="help-text">Choose a convenient time</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="note">Additional Notes (optional)</label>
-                    <textarea id="note" name="note" class="form-control" rows="3" placeholder="Any specific questions or things to prepare for..."></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit">📅 Confirm Booking</button>
-                <a href="{% url 'mentor_detail' mentor.id %}" class="btn-back">← Back to Profile</a>
+                <button type="submit" class="btn-submit">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    Confirm Booking
+                </button>
+                <a href="{% url 'mentor_detail' mentor.id %}" class="btn-back">
+                    ← Back to Mentor Profile
+                </a>
             </form>
         </div>
 
-        
         <!-- RIGHT: Mentor Card -->
         <div class="mentor-card">
-
-            <div class="mentor-photo">
-                {% if mentor.profile_photo %}
-                <img src="{{ mentor.profile_photo.url }}" alt="{{ mentor.username }}">
-                {% else %}
-                <div class="placeholder-avatar">{{ mentor.username.0|upper }}</div>
-                {% endif %}
+            <div class="mentor-card-header">
+                <div class="mentor-photo">
+                    {% if mentor.profile_photo %}
+                    <img src="{{ mentor.profile_photo.url }}" alt="{{ mentor.username }}">
+                    {% else %}
+                    <div class="placeholder-avatar">{{ mentor.username.0|upper }}</div>
+                    {% endif %}
+                </div>
+                <h4 class="mentor-name">{{ mentor.username }}</h4>
+                <div class="mentor-profession">{{ mentor.profession|default:"Professional Mentor" }}</div>
             </div>
 
-            <h4 class="mentor-name">{{ mentor.username }}</h4>
-            <p class="mentor-profession">{{ mentor.profession|default:"Professional Mentor" }}</p>
-
             <div class="mentor-meta">
-                <p><strong>Expertise:</strong> {{ mentor.expertise|default:"Various technologies" }}</p>
-                <p><strong>Experience:</strong> {{ mentor.experience_years|default:"5+" }} years</p>
+                <div class="meta-item">
+                    <span class="meta-label">Expertise</span>
+                    <span class="meta-value">{{ mentor.expertise|default:"Various technologies" }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Experience</span>
+                    <span class="meta-value">{{ mentor.experience_years|default:"5+" }} years</span>
+                </div>
                 {% if mentor.bio %}
-                <p><strong>About:</strong> {{ mentor.bio|truncatewords:20 }}</p>
+                <div class="meta-item">
+                    <span class="meta-label">About</span>
+                    <span class="meta-value">{{ mentor.bio|truncatewords:20 }}</span>
+                </div>
                 {% endif %}
             </div>
 
             {% if mentor_profile %}
             <div class="fee-info">
-                <h5>💰 Session Fees (₹)</h5>
-                <p>🕐 30 min — <strong>₹{{ mentor_profile.fee_30min }}</strong></p>
-                <p>🕑 60 min — <strong>₹{{ mentor_profile.fee_60min }}</strong></p>
+                <h5>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Session Fees
+                </h5>
+                <div class="fee-row">
+                    <span>30 Minutes</span>
+                    <strong>₹{{ mentor_profile.fee_30min }}</strong>
+                </div>
+                <div class="fee-row">
+                    <span>60 Minutes</span>
+                    <strong>₹{{ mentor_profile.fee_60min }}</strong>
+                </div>
             </div>
             {% endif %}
 
             <div class="slots-box">
-                <h5>📅 Available Time Slots</h5>
+                <h5>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Available Slots
+                </h5>
                 {% if availability_slots %}
-                <div>
+                <div class="slots-container">
                     {% for slot in availability_slots %}
-                    <span class="slot-pill">
-                        📆 {{ slot.get_day_of_week_display }}
-                        &nbsp;{{ slot.start_time|time:'h:i A' }} – {{ slot.end_time|time:'h:i A' }}
-                    </span>
+                    <div class="slot-pill">
+                        <span class="slot-date">{{ slot.date|date:"M d" }}</span>
+                        <span class="slot-time">{{ slot.start_time|time:'h:i A' }}</span>
+                    </div>
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="no-slots">No availability slots added yet.</p>
+                <div class="no-slots">No availability slots added yet.</div>
                 {% endif %}
             </div>
 
         </div>
 
     </div>
-    
 </div>
-
-<script>
-    // Set minimum date to today
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('date').min = today;
-    
-    // Set default date to today
-    document.getElementById('date').value = today;
-
-
-
-    const now = new Date();
-
-const hours = String(now.getHours()).padStart(2,'0');
-const minutes = String(now.getMinutes()).padStart(2,'0');
-
-document.getElementById("time").value = `${hours}:${minutes}`;
-</script>
-
 {% endblock %}

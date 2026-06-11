@@ -4,12 +4,16 @@ __pycache__/
 *.pyo
 *.pyd
 
+
+
 # Django
 # db.sqlite3
 media/
 
+
 # ML models
 *.pkl
+
 
 # Environment
 .env

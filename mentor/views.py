@@ -54,7 +54,7 @@ def mentor_detail(request, id):
     availability_slots = AvailabilitySlot.objects.filter(
         mentor=mentor,
         is_active=True
-    ).order_by('day_of_week', 'start_time')
+    ).order_by('date', 'start_time')
     
     # Get user's sessions with this mentor (if logged in)
     user_sessions = None
@@ -163,50 +163,40 @@ def mentor_dashboard(request):
     #         return redirect('mentor_dashboard')
     
     # Get pending session requests
-    pending_sessions = MentorshipSession.objects.filter(
+    pending_sessions_qs = MentorshipSession.objects.filter(
         mentor=request.user,
         status='pending'
-    ).select_related('student').order_by('scheduled_date', 'scheduled_time')[:10]
+    ).select_related('student').order_by('scheduled_date', 'scheduled_time')
     
-    # Get upcoming accepted sessions
-    today = timezone.now().date()
-    upcoming_sessions = MentorshipSession.objects.filter(
+    total_pending = pending_sessions_qs.count()
+    pending_sessions = pending_sessions_qs[:10]
+    
+    # Get upcoming/accepted sessions (all that are accepted, regardless of date, so mentor doesn't lose track of past-due ones)
+    upcoming_sessions_qs = MentorshipSession.objects.filter(
         mentor=request.user,
-        status='accepted',
-        scheduled_date__gte=today
-    ).select_related('student').order_by('scheduled_date', 'scheduled_time')[:10]
+        status='accepted'
+    ).select_related('student').order_by('scheduled_date', 'scheduled_time')
     
-    # Get old appointments
+    total_upcoming = upcoming_sessions_qs.count()
+    upcoming_sessions = upcoming_sessions_qs[:10]
+    
+    # Get old appointments (Optional: you can also include completed MentorshipSessions here if needed)
     old_appointments = Appointment.objects.filter(
         mentor=request.user
     ).select_related('user').order_by('-created_at')[:5]
     
-    # Get availability slots
-    # availability_slots = AvailabilitySlot.objects.filter(
-    #     mentor=request.user,
-    #     is_active=True
-    # ).order_by('day_of_week', 'start_time')
-    
-    # Get content contributions
-    # contributions = ContentContribution.objects.filter(
-    #     author=request.user
-    # ).order_by('-created_at')[:10]
-    
     # Calculate stats
-    total_pending = pending_sessions.count()
     completed_sessions_count = MentorshipSession.objects.filter(
         mentor=request.user,
         status='completed'
     ).count()
     
     context = {
-        # 'mentor_profile': mentor_profile,
         'pending_sessions': pending_sessions,
         'upcoming_sessions': upcoming_sessions,
         'old_appointments': old_appointments,
-        # 'availability_slots': availability_slots,
-        # 'contributions': contributions,
         'total_pending': total_pending,
+        'total_upcoming': total_upcoming,
         'completed_sessions_count': completed_sessions_count,
     }
     
@@ -283,7 +273,7 @@ def mentor_content(request):
 #     availability_slots = AvailabilitySlot.objects.filter(
 #         mentor=request.user,
 #         is_active=True
-#     ).order_by('day_of_week', 'start_time')
+#     ).order_by('date', 'start_time')
 
 #     context={
 #         'mentor_profile': mentor_profile,
@@ -312,15 +302,21 @@ def mentor_profile(request):
     )
 
     if request.method == 'POST':
-        mentor_profile.bio = request.POST.get('bio', '').strip()
-        mentor_profile.expertise = request.POST.get('skills', '').strip()
-        mentor_profile.fee_30min = request.POST.get('fee_30m') or 10
-        mentor_profile.fee_60min = request.POST.get('fee_60m') or 20
+        # Update User fields
+        request.user.first_name = request.POST.get('first_name', '').strip()
+        request.user.last_name = request.POST.get('last_name', '').strip()
 
         # Handle profile photo upload
         if request.FILES.get('profile_photo'):
             request.user.profile_photo = request.FILES['profile_photo']
-            request.user.save()
+        
+        request.user.save()
+
+        # Update MentorProfile fields
+        mentor_profile.bio = request.POST.get('bio', '').strip()
+        mentor_profile.expertise = request.POST.get('skills', '').strip()
+        mentor_profile.fee_30min = request.POST.get('fee_30m') or 10
+        mentor_profile.fee_60min = request.POST.get('fee_60m') or 20
 
         if len(mentor_profile.bio) > 500:
             messages.error(request, "❌ Bio must be under 500 characters.")
@@ -333,7 +329,7 @@ def mentor_profile(request):
     availability_slots = AvailabilitySlot.objects.filter(
         mentor=request.user,
         is_active=True
-    ).order_by('day_of_week', 'start_time')
+    ).order_by('date', 'start_time')
 
     return render(request, 'mentor/profile.html', {
         'mentor_profile': mentor_profile,
@@ -350,14 +346,14 @@ def add_availability_slot(request):
         return redirect('home')
     
     if request.method == 'POST':
-        day = request.POST.get('day')
+        date = request.POST.get('date')
         time_from = request.POST.get('time_from')
         time_to = request.POST.get('time_to')
         
-        if day and time_from and time_to:
+        if date and time_from and time_to:
             existing = AvailabilitySlot.objects.filter(
                 mentor=request.user,
-                day_of_week=day,
+                date=date,
                 start_time=time_from,
                 end_time=time_to,
                 is_active=True
@@ -368,7 +364,7 @@ def add_availability_slot(request):
             else:
                 AvailabilitySlot.objects.create(
                     mentor=request.user,
-                    day_of_week=day,
+                    date=date,
                     start_time=time_from,
                     end_time=time_to
                 )
@@ -387,11 +383,11 @@ def remove_availability_slot(request, slot_id):
         return redirect('home')
     
     slot = get_object_or_404(AvailabilitySlot, id=slot_id, mentor=request.user)
-    day = slot.get_day_of_week_display()
+    date_str = slot.date.strftime('%B %d, %Y')
     time_range = f"{slot.start_time.strftime('%I:%M %p')} - {slot.end_time.strftime('%I:%M %p')}"
     
     slot.delete()
-    messages.success(request, f"✅ Removed availability: {day} {time_range}")
+    messages.success(request, f"✅ Removed availability: {date_str} {time_range}")
     return redirect('mentor_dashboard')
 
 
@@ -602,15 +598,23 @@ def book_session(request, id):
         mentor_profile = None
 
     if request.method == "POST":
-        scheduled_date = request.POST.get('date')
-        scheduled_time = request.POST.get('time')
+        slot_id = request.POST.get('slot_id')
         duration = int(request.POST.get('duration', 30))
         topic = request.POST.get('topic', '').strip()
         note = request.POST.get('note', '').strip()
         
-        if not scheduled_date or not scheduled_time:
-            messages.error(request, "❌ Please provide both date and time.")
+        if not slot_id:
+            messages.error(request, "❌ Please select an available slot.")
             return redirect('book_session', id=mentor.id)
+            
+        try:
+            slot = AvailabilitySlot.objects.get(id=slot_id, mentor=mentor, is_active=True)
+        except AvailabilitySlot.DoesNotExist:
+            messages.error(request, "❌ The selected slot is no longer available.")
+            return redirect('book_session', id=mentor.id)
+            
+        scheduled_date = slot.date
+        scheduled_time = slot.start_time
         
         if mentor_profile:
             token_fee = mentor_profile.fee_30min if duration == 30 else mentor_profile.fee_60min
@@ -635,7 +639,7 @@ def book_session(request, id):
     availability_slots = AvailabilitySlot.objects.filter(
         mentor=mentor,
         is_active=True
-    ).order_by('day_of_week', 'start_time')
+    ).order_by('date', 'start_time')
 
     context = {
         'mentor': mentor,

@@ -1,0 +1,12 @@
+django-jazzmin
+joblib
+pillow
+numpy
+scikit-learn
+dotenv
+groq
+Django>=5.2
+gunicorn
+whitenoise
+dj-database-url
+psycopg2-binary

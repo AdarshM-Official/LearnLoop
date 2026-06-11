@@ -58,3 +58,46 @@ def send_message(request, session_id):
         return redirect('chat_room', session_id=session_id)
             
     return redirect('home')
+
+
+@login_required
+def chat_inbox(request):
+    """List all active chats for the current user."""
+    if request.user.role == 'mentor':
+        sessions = MentorshipSession.objects.filter(
+            mentor=request.user,
+            status__in=['accepted', 'completed']
+        ).select_related('student').order_by('-updated_at')
+        
+        # Filter for unique students (keep only the latest session per student)
+        unique_sessions = []
+        seen_users = set()
+        for session in sessions:
+            if session.student_id not in seen_users:
+                unique_sessions.append(session)
+                seen_users.add(session.student_id)
+                
+        sessions_to_display = unique_sessions
+        base_template = 'dashboard/mentorbase.html'
+    else:
+        sessions = MentorshipSession.objects.filter(
+            student=request.user,
+            status__in=['accepted', 'completed']
+        ).select_related('mentor').order_by('-updated_at')
+        
+        # Filter for unique mentors (keep only the latest session per mentor)
+        unique_sessions = []
+        seen_users = set()
+        for session in sessions:
+            if session.mentor_id not in seen_users:
+                unique_sessions.append(session)
+                seen_users.add(session.mentor_id)
+                
+        sessions_to_display = unique_sessions
+        base_template = 'dashboard/userbase.html'
+        
+    context = {
+        'sessions': sessions_to_display,
+        'base_template': base_template
+    }
+    return render(request, 'chat/chat_inbox.html', context)
