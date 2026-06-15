@@ -26,12 +26,16 @@ GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4h19^p)$iox!u9vsn@2ekmeyg8u-()3@u*xaxpvii7@2tr=9x*'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4h19^p)$iox!u9vsn@2ekmeyg8u-()3@u*xaxpvii7@2tr=9x*')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECURITY WARNING: don't run with debug turned on in production! Make sure to set the DEBUG environment variable to 'False' in production.
+DEBUG = os.environ.get('DEBUG', 'False') == 'False'
 
-ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']   # Update with your actual domain and localhost for development
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', ',localhost,127.0.0.1').split(',')
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -85,14 +89,13 @@ WSGI_APPLICATION = 'learnloop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        'OPTIONS': {
-            'timeout': 20, # Increase timeout to 20 seconds
-        },
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR}/db.sqlite3',
+        conn_max_age=600
+    )
 }
 
 
@@ -136,7 +139,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static') # Updated static root for production build
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 
