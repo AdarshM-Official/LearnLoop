@@ -26,14 +26,14 @@ GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4h19^p)$iox!u9vsn@2ekmeyg8u-()3@u*xaxpvii7@2tr=9x*')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production! Make sure to set the DEBUG environment variable to 'False' in production.
 # DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 DEBUG = True
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', ',localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', ',localhost,127.0.0.1').split(',') 
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
@@ -163,3 +163,35 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_URL = 'auth'
+
+
+#security settings for production
+
+# SESSION_COOKIE_SECURE = True
+
+# SECURE_SSL_REDIRECT = True
+
+# CSRF_COOKIE_SECURE = True
+
+SECURE_HSTS_SECONDS = 3600 # this is the time in seconds that the browser should remember to only access the site over HTTPS , ie 1 hour , so 
+
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True # this means that the HSTS policy will also apply to all subdomains of your site
+ 
+SECURE_HSTS_PRELOAD = True  # this means that the site will be included in the HSTS preload list maintained by browsers, which can help to ensure that users always access the site over HTTPS
+
+SECURE_SSL_REDIRECT = os.environ.get(
+    "SECURE_SSL_REDIRECT", "False"
+) == "True"
+
+SESSION_COOKIE_SECURE = os.environ.get(
+    "SESSION_COOKIE_SECURE", "False"
+) == "True"
+
+CSRF_COOKIE_SECURE = os.environ.get(
+    "CSRF_COOKIE_SECURE", "False"
+) == "True"
+
+SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO",
+    "https",
+) # this is used to tell Django that it is behind a proxy (like a load balancer) that is handling SSL termination, and that it should trust the X-Forwarded-Proto header to determine whether the original request was made over HTTPS or not.
