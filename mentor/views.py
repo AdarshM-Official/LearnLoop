@@ -302,6 +302,14 @@ def mentor_profile(request):
     )
 
     if request.method == 'POST':
+        # Check username uniqueness
+        new_username = request.POST.get('username', '').strip().lower()
+        if new_username and new_username != request.user.username.lower():
+            if CustomUser.objects.filter(username__iexact=new_username).exclude(pk=request.user.pk).exists():
+                messages.error(request, "❌ Username is already taken.")
+                return redirect(request.path)
+            request.user.username = new_username
+
         # Update User fields
         request.user.first_name = request.POST.get('first_name', '').strip()
         request.user.last_name = request.POST.get('last_name', '').strip()

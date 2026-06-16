@@ -29,7 +29,9 @@ GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4h19^p)$iox!u9vsn@2ekmeyg8u-()3@u*xaxpvii7@2tr=9x*')
 
 # SECURITY WARNING: don't run with debug turned on in production! Make sure to set the DEBUG environment variable to 'False' in production.
-DEBUG = os.environ.get('DEBUG', 'False') == 'False'
+# DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', ',localhost,127.0.0.1').split(',')
 

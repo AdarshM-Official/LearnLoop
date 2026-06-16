@@ -9,6 +9,9 @@ urlpatterns = [
     # Mentor authentication (login/signup)
     path('mentor/auth/', views.mentor_auth_view, name='mentor_auth'),
     
+    path('user/profile/', views.user_profile, name='user_profile'),
+    path('user/change-password/', views.change_password, name='change_password'),
+    
     # ❌ REMOVE THIS LINE - mentor dashboard is now in mentor/urls.py
     # path('mentor/dashboard/', views.mentor_dashboard, name='mentor_dashboard'),
     

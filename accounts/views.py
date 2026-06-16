@@ -146,3 +146,46 @@ def delete_mentor(request, mentor_id):
 def log_out(request):
     logout(request)
     return redirect('auth')
+
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
+@login_required
+def user_profile(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated successfully!')
+            return redirect('user_profile')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = UserProfileForm(instance=request.user)
+    
+    return render(request, 'dashboard/user_profile.html', {'form': form})
+
+@login_required
+def change_password(request):
+    is_mentor = getattr(request.user, 'role', 'user') == 'mentor'
+    base_template = 'dashboard/mentorbase.html' if is_mentor else 'dashboard/userbase.html'
+    from django.urls import reverse
+    cancel_url = reverse('mentor_profile_setup') if is_mentor else reverse('user_profile')
+
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important to keep the user logged in
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('mentor_profile_setup' if is_mentor else 'user_profile')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    
+    return render(request, 'dashboard/change_password.html', {
+        'form': form,
+        'base_template': base_template,
+        'cancel_url': cancel_url
+    })

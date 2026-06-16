@@ -139,3 +139,26 @@ class CustomUserForm(forms.ModelForm):
         # 🔥 THIS LINE KILLS THE '---------' OPTION
         self.fields["gender"].choices = CustomUser.GENDER_CHOICES
         self.fields["gender"].required = True
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'profile_photo', 'education', 'career_domain']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}),
+            'profile_photo': forms.FileInput(attrs={'class': 'form-control'}),
+            'education': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. B.Tech in Computer Science'}),
+            'career_domain': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Software Development'}),
+        }
+        
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if username:
+            username = username.lower()
+            if CustomUser.objects.filter(username__iexact=username).exclude(pk=self.instance.pk).exists():
+                raise forms.ValidationError("A user with that username already exists.")
+        return username

@@ -46,7 +46,11 @@ class CustomUser(AbstractUser):
         null=False
     )
         
-    profile_photo = models.ImageField(upload_to='mentor_photos/', blank=False, null=True)
+    profile_photo = models.ImageField(upload_to='profile_photos/', blank=False, null=True)
+    
+    # Normal user extra fields
+    education = models.CharField(max_length=200, blank=True, null=True)
+    career_domain = models.CharField(max_length=100, blank=True, null=True)
 
     # Professional info
     profession = models.CharField(max_length=100, blank=False, null=True)
