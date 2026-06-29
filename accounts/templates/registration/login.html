@@ -125,6 +125,7 @@ form {
 }
 form p { width: 100%; margin-bottom: 15px; }
 
+
 input {
     width: 100%;
     padding: 12px 15px;
@@ -326,7 +327,7 @@ input[type="password"], input[type="text"] {
 {{ login_form.as_p }}
 <button type="submit" name="login_submit">Sign In</button><br>
 <a href="#" class="mobile-toggle" id="mobileSignUp">Create account</a><br>
-<a href="{% url 'mentor_auth' %}">Mentor Registration</a>
+<a href="{% url 'mentor_auth' %}" class="mntr">Mentor Registration</a>
 </form>
 </div>
 
